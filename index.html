@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SDG 1：消除貧窮 - 終極視覺報告</title>
+  
+  <!-- 引入所需的函式庫 -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.0/dist/vanilla-tilt.min.js"></script>
+  
+  <style>
+    :root {
+      --primary: #E31837;
+      --secondary: #FFC107;
+      --dark: #1a202c;
+    }
+    
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background-color: var(--dark);
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    .gradient-text {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .parallax-section {
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+      perspective: 1000px;
+    }
+
+    .card-3d {
+      transform-style: preserve-3d;
+      transition: transform 0.5s;
+    }
+
+    .progress-bar {
+      width: 0;
+      height: 4px;
+      background: var(--primary);
+      transition: width 1s ease-in-out;
+    }
+
+    .image-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+
+    .image-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .image-card img {
+      transition: transform 0.5s;
+    }
+
+    .image-card:hover img {
+      transform: scale(1.1);
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 2rem;
+      transition: transform 0.3s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-10px);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 2px;
+      background: var(--primary);
+    }
+
+    .scroll-indicator {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: var(--primary);
+      z-index: 1000;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body>
+  <!-- 滾動進度條 -->
+  <div class="scroll-indicator" id="scrollIndicator"></div>
+
+  <!-- 英雄區塊 -->
+  <section class="parallax-section" id="hero">
+    <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+    <div class="relative container mx-auto px-4 h-full flex items-center">
+      <div class="text-center w-full">
+        <h1 class="text-6xl font-bold mb-6 gradient-text" data-aos="zoom-in">
+          SDG 1：消除貧窮
+        </h1>
+        <p class="text-2xl mb-8" data-aos="fade-up" data-aos-delay="200">
+          攜手共創無貧窮的未來世界
+        </p>
+        <div class="floating">
+          <svg class="w-8 h-8 mx-auto text-white animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 全球現況 -->
+  <section class="py-20 px-4">
+    <div class="container mx-auto">
+      <h2 class="text-4xl font-bold mb-12 text-center" data-aos="fade-down">
+        全球貧窮現況
+      </h2>
+      
+      <!-- 統計卡片 -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <div class="stat-card" data-aos="fade-up">
+          <h3 class="text-5xl font-bold text-primary mb-4" id="counter1">0</h3>
+          <p class="text-lg">全球極端貧窮人口（百萬）</p>
+        </div>
+        <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+          <h3 class="text-5xl font-bold text-primary" id="counter2">0</h3>
+          <p class="text-lg">每日生活費不足1.90美元人口比例</p>
+        </div>
+        <div class="stat-card" data-aos="fade-up" data-aos-delay="400">
+          <h3 class="text-5xl font-bold text-primary" id="counter3">0</h3>
+          <p class="text-lg">兒童貧窮人口（百萬）</p>
+        </div>
+      </div>
+
+      <!-- 區域分布圖表 -->
+      <div class="bg-gray-800 p-6 rounded-lg" data-aos="fade-up">
+        <h3 class="text-2xl mb-4">全球貧窮人口區域分布</h3>
+        <canvas id="regionChart" height="300"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- 貧窮的影響 -->
+  <section class="py-20 bg-gray-900">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold mb-12 text-center" data-aos="fade-down">
+        貧窮的多重影響
+      </h2>
+      
+      <!-- 影響領域卡片 -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="card-3d p-6 bg-gray-800 rounded-lg" data-aos="flip-left">
+          <img src="https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7" class="w-full h-48 object-cover rounded-lg mb-4" alt="健康影響">
+          <h3 class="text-xl font-bold mb-2">健康影響</h3>
+          <p>營養不良、醫療資源缺乏</p>
+        </div>
+        <div class="card-3d p-6 bg-gray-800 rounded-lg" data-aos="flip-left" data-aos-delay="200">
+          <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b" class="w-full h-48 object-cover rounded-lg mb-4" alt="教育影響">
+          <h3 class="text-xl font-bold mb-2">教育影響</h3>
+          <p>教育機會不平等、輟學率高</p>
+        </div>
+        <div class="card-3d p-6 bg-gray-800 rounded-lg" data-aos="flip-left" data-aos-delay="400">
+          <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952" class="w-full h-48 object-cover rounded-lg mb-4" alt="就業影響">
+          <h3 class="text-xl font-bold mb-2">就業影響</h3>
+          <p>就業機會受限、薪資水平低</p>
+        </div>
+        <div class="card-3d p-6 bg-gray-800 rounded-lg" data-aos="flip-left" data-aos-delay="600">
+          <img src="https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8" class="w-full h-48 object-cover rounded-lg mb-4" alt="社會影響">
+          <h3 class="text-xl font-bold mb-2">社會影響</h3>
+          <p>社會排斥、代際貧窮循環</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 解決方案 -->
+  <section class="py-20">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold mb-12 text-center" data-aos="fade-down">
+        全球解決方案
+      </h2>
+      
+      <!-- 時間軸 -->
+      <div class="timeline max-w-3xl mx-auto">
+        <div class="timeline-item" data-aos="fade-right">
+          <h3 class="text-2xl font-bold mb-2">微型貸款計劃</h3>
+          <p>幫助低收入群體創業，實現經濟自主</p>
+          <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e" class="mt-4 rounded-lg w-full" alt="微型貸款">
+        </div>
+        
+        <div class="timeline-item" data-aos="fade-right" data-aos-delay="200">
+          <h3 class="text-2xl font-bold mb-2">教育支持計劃</h3>
+          <p>提供獎學金和教育資源，打破貧窮循環</p>
+          <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45" class="mt-4 rounded-lg w-full" alt="教育支持">
+        </div>
+        
+        <div class="timeline-item" data-aos="fade-right" data-aos-delay="400">
+          <h3 class="text-2xl font-bold mb-2">技能培訓項目</h3>
+          <p>職業技能培訓，提升就業競爭力</p>
+          <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3" class="mt-4 rounded-lg w-full" alt="技能培訓">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 成功案例 -->
+  <section class="py-20 bg-gray-900">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold mb-12 text-center" data-aos="fade-down">
+        全球成功案例
+      </h2>
+      
+      <!-- 案例圖片牆 -->
+      <div class="image-gallery">
+        <div class="image-card" data-aos="zoom-in">
+          <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09" alt="案例1">
+          <div class="p-4">
+            <h3 class="font-bold">孟加拉國微型貸款</h3>
+          </div>
+        </div>
+        <div class="image-card" data-aos="zoom-in" data-aos-delay="200">
+          <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c" alt="案例2">
+          <div class="p-4">
+            <h3 class="font-bold">印度農村發展</h3>
+          </div>
+        </div>
+        <div class="image-card" data-aos="zoom-in" data-aos-delay="400">
+          <img src="https://images.unsplash.com/photo-1509099836639-18ba1795216d" alt="案例3">
+          <div class="p-4">
+            <h3 class="font-bold">非洲教育計劃</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 行動呼籲 -->
+  <section class="py-20">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold mb-12 text-center" data-aos="fade-down">
+        立即行動
+      </h2>
+      
+      <!-- 行動卡片 -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="p-6 bg-gray-800 rounded-lg" data-aos="fade-up">
+          <h3 class="text-2xl font-bold mb-4">個人行動</h3>
+          <ul class="space-y-2">
+            <li>• 參與志願服務</li>
+            <li>• 支持公平貿易</li>           
+            <li>• 關注貧窮議題</li>
+            <li>• 分享相關資訊</li>
+          </ul>
+        </div>
+        <div class="p-6 bg-gray-800 rounded-lg" data-aos="fade-up" data-aos-delay="200">
+          <h3 class="text-2xl font-bold mb-4">企業行動</h3>
+          <ul class="space-y-2">
+            <li>• 提供就業機會</li>
+            <li>• 實施公平薪資</li>
+            <li>• 支持社區發展</li>
+            <li>• 推動永續計劃</li>
+          </ul>
+        </div>
+        <div class="p-6 bg-gray-800 rounded-lg" data-aos="fade-up" data-aos-delay="400">
+          <h3 class="text-2xl font-bold mb-4">政府行動</h3>
+          <ul class="space-y-2">
+            <li>• 完善社會福利</li>
+            <li>• 推動教育平等</li>
+            <li>• 創造就業機會</li>
+            <li>• 國際合作交流</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 互動數據展示 -->
+  <section class="py-20 bg-gray-900">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold mb-12 text-center" data-aos="fade-down">
+        全球減貧進展
+      </h2>
+      
+      <!-- 進展圖表 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-gray-800 p-6 rounded-lg" data-aos="fade-right">
+          <h3 class="text-2xl mb-4">極端貧窮人口變化趨勢</h3>
+          <canvas id="trendChart" height="300"></canvas>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-lg" data-aos="fade-left">
+          <h3 class="text-2xl mb-4">各地區減貧進展</h3>
+          <canvas id="progressChart" height="300"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 圖片展示區 -->
+  <section class="py-20">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold mb-12 text-center" data-aos="fade-down">
+        全球行動紀實
+      </h2>
+      
+      <!-- 圖片網格 -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="relative overflow-hidden rounded-lg" data-aos="zoom-in">
+          <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c" class="w-full h-64 object-cover transform hover:scale-110 transition-transform duration-500" alt="教育支援">
+        </div>
+        <div class="relative overflow-hidden rounded-lg" data-aos="zoom-in" data-aos-delay="100">
+          <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09" class="w-full h-64 object-cover transform hover:scale-110 transition-transform duration-500" alt="技能培訓">
+        </div>
+        <div class="relative overflow-hidden rounded-lg" data-aos="zoom-in" data-aos-delay="200">
+          <img src="https://images.unsplash.com/photo-1509099836639-18ba1795216d" class="w-full h-64 object-cover transform hover:scale-110 transition-transform duration-500" alt="社區發展">
+        </div>
+        <div class="relative overflow-hidden rounded-lg" data-aos="zoom-in" data-aos-delay="300">
+          <img src="https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7" class="w-full h-64 object-cover transform hover:scale-110 transition-transform duration-500" alt="醫療援助">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 結論與展望 -->
+  <section class="py-20 bg-gray-900">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold mb-12 text-center" data-aos="fade-down">
+        未來展望
+      </h2>
+      
+      <!-- 展望卡片 -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="p-6 bg-gray-800 rounded-lg transform hover:-translate-y-2 transition-transform duration-300" data-aos="fade-up">
+          <h3 class="text-2xl font-bold mb-4">2025年目標</h3>
+          <p>減少25%極端貧窮人口</p>
+          <div class="progress-bar mt-4" data-progress="25"></div>
+        </div>
+        <div class="p-6 bg-gray-800 rounded-lg transform hover:-translate-y-2 transition-transform duration-300" data-aos="fade-up" data-aos-delay="200">
+          <h3 class="text-2xl font-bold mb-4">2027年目標</h3>
+          <p>實現基礎教育全面普及</p>
+          <div class="progress-bar mt-4" data-progress="50"></div>
+        </div>
+        <div class="p-6 bg-gray-800 rounded-lg transform hover:-translate-y-2 transition-transform duration-300" data-aos="fade-up" data-aos-delay="400">
+          <h3 class="text-2xl font-bold mb-4">2030年目標</h3>
+          <p>消除極端貧窮</p>
+          <div class="progress-bar mt-4" data-progress="75"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 互動式問答區 -->
+  <section class="py-20">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold mb-12 text-center" data-aos="fade-down">
+        常見問題
+      </h2>
+      
+      <div class="max-w-3xl mx-auto">
+        <div class="space-y-4">
+          <div class="p-6 bg-gray-800 rounded-lg cursor-pointer question-card" data-aos="fade-up">
+            <h3 class="text-xl font-bold">什麼是極端貧窮？</h3>
+            <p class="mt-4 hidden">每日生活費用低於1.90美元的人口被定義為極端貧窮人口。</p>
+          </div>
+          <div class="p-6 bg-gray-800 rounded-lg cursor-pointer question-card" data-aos="fade-up" data-aos-delay="200">
+            <h3 class="text-xl font-bold">如何參與減貧行動？</h3>
+            <p class="mt-4 hidden">可以通過志願服務、捐贈、支持公平貿易等方式參與。</p>
+          </div>
+          <div class="p-6 bg-gray-800 rounded-lg cursor-pointer question-card" data-aos="fade-up" data-aos-delay="400">
+            <h3 class="text-xl font-bold">貧窮問題最嚴重的地區在哪裡？</h3>
+            <p class="mt-4 hidden">非洲撒哈拉以南地區是全球貧窮問題最嚴重的區域。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 頁腳 -->
+  <footer class="py-10 bg-gray-800">
+    <div class="container mx-auto px-4 text-center">
+      <p class="text-gray-400">© 2025 SDG 1 消除貧窮計畫</p>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // 初始化 AOS
+    AOS.init({
+      duration: 1000,
+      once: true
+    });
+
+    // 初始化 GSAP
+    gsap.registerPlugin(ScrollTrigger);
+
+    // 滾動進度條
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('scrollIndicator').style.width = scrolled + '%';
+    });
+
+    // 數字計數動畫
+    const counters = document.querySelectorAll('[id^="counter"]');
+    const counterValues = [689, 9.2, 356];
+    
+    counters.forEach((counter, index) => {
+      gsap.to(counter, {
+        innerHTML: counterValues[index],
+        duration: 2,
+        snap: { innerHTML: 1 },
+        scrollTrigger: {
+          trigger: counter,
+          start: "top 80%"
+        }
+      });
+    });
+
+    // 區域分布圖表
+    const regionChart = new Chart(document.getElementById('regionChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['非洲', '亞洲', '拉丁美洲', '其他地區'],
+        datasets: [{
+          data: [47, 33, 12, 8],
+          backgroundColor: ['#E31837', '#FFC107', '#4CAF50', '#2196F3']
+        }]
+      }
+    });
+
+    // 趨勢圖表
+    const trendChart = new Chart(document.getElementById('trendChart'), {
+      type: 'line',
+      data: {
+        labels: ['2015', '2018', '2021', '2024'],
+        datasets: [{
+          label: '極端貧窮人口（百萬）',
+          data: [736, 656, 689, 648],
+          borderColor: '#E31837',
+          tension: 0.1
+        }]
+      }
+    });
+
+    // 進展圖表
+    const progressChart = new Chart(document.getElementById('progressChart'), {
+      type: 'bar',
+      data: {
+        labels: ['非洲', '亞洲', '拉美', '其他'],
+        datasets: [{
+          label: '減貧進展（%）',
+          data: [15, 25, 35, 45],
+          backgroundColor: '#FFC107'
+        }]
+      }
+    });
+
+    // 問答卡片互動
+    document.querySelectorAll('.question-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const answer = card.querySelector('p');
+        answer.classList.toggle('hidden');
+      });
+    });
+
+    // 3D卡片效果
+    VanillaTilt.init(document.querySelectorAll(".card-3d"), {
+      max: 25,
+      speed: 400,
+      glare: true,
+      "max-glare": 0.5
+    });
+
+    // 進度條動畫
+    document.querySelectorAll('.progress-bar').forEach(bar => {
+      const progress = bar.dataset.progress;
+      gsap.to(bar, {
+        width: progress + '%',
+        scrollTrigger: {
+          trigger: bar,
+          start: "top 80%"
+        }
+      });
+    });
+  </script>
+</body>
+</html>
