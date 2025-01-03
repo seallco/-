@@ -1,0 +1,844 @@
+    <!DOCTYPE html>
+    <html lang="zh-TW">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>全球貧困問題深度分析報告</title>
+        
+        <!-- CSS 引入 -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css">
+        
+        <style>
+            :root {
+                --primary-color: #2196F3;
+                --secondary-color: #FFC107;
+                --accent-color: #FF4081;
+                --dark-color: #333;
+                --light-color: #f4f4f4;
+                --gradient-primary: linear-gradient(135deg, #2196F3, #1976D2);
+            }
+
+            body {
+                font-family: 'Noto Sans TC', sans-serif;
+                line-height: 1.6;
+                scroll-behavior: smooth;
+            }
+
+            /* 現代化導航欄 */
+            .navbar {
+                backdrop-filter: blur(10px);
+                background: rgba(255, 255, 255, 0.95);
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+
+            /* 高級英雄區塊 */
+            .hero-section {
+                position: relative;
+                height: 100vh;
+                background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                           url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-4.0.3') center/cover;
+                overflow: hidden;
+            }
+
+            .hero-content {
+                position: relative;
+                z-index: 2;
+            }
+
+            .hero-title {
+                font-size: 4rem;
+                font-weight: 700;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            }
+
+            /* 動態數據卡片 */
+            .data-card {
+                background: white;
+                border-radius: 15px;
+                padding: 2rem;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .data-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 5px;
+                background: var(--gradient-primary);
+            }
+
+            .data-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            }
+
+            /* 互動式圖表容器 */
+            .chart-container {
+                background: white;
+                border-radius: 15px;
+                padding: 2rem;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                margin-bottom: 2rem;
+            }
+
+            /* 時間軸樣式 */
+            .timeline {
+                position: relative;
+                padding: 2rem 0;
+            }
+
+            .timeline::before {
+                content: '';
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 2px;
+                height: 100%;
+                background: var(--primary-color);
+            }
+
+            .timeline-item {
+                margin-bottom: 2rem;
+                position: relative;
+            }
+
+            .timeline-content {
+                background: white;
+                border-radius: 15px;
+                padding: 1.5rem;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                position: relative;
+            }
+
+            /* 3D 卡片效果 */
+            .feature-card {
+                transform-style: preserve-3d;
+                transition: transform 0.5s;
+            }
+
+            .feature-card:hover {
+                transform: rotateY(10deg);
+            }
+
+            /* 動態背景 */
+            .dynamic-bg {
+                position: relative;
+                overflow: hidden;
+            }
+
+            .dynamic-bg::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(45deg, #2196F3, #1976D2);
+                opacity: 0.9;
+                z-index: 1;
+            }
+
+            /* 互動式按鈕 */
+            .btn-custom {
+                background: var(--gradient-primary);
+                border: none;
+                padding: 12px 30px;
+                border-radius: 50px;
+                color: white;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .btn-custom::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(255,255,255,0.2);
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .btn-custom:hover::before {
+                transform: translateX(0);
+            }
+
+            /* 響應式調整 */
+            @media (max-width: 768px) {
+                .hero-title {
+                    font-size: 2.5rem;
+                }
+                
+                .timeline::before {
+                    left: 0;
+                }
+                
+                .timeline-content {
+                    margin-left: 20px;
+                }
+            }
+
+            /* 動畫效果 */
+            @keyframes float {
+                0% { transform: translateY(0px); }
+                50% { transform: translateY(-20px); }
+                100% { transform: translateY(0px); }
+            }
+
+            .floating {
+                animation: float 6s ease-in-out infinite;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- 現代化導航欄 -->
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <i class="fas fa-globe me-2"></i>
+                    全球貧困研究報告
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#overview">概覽</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#analysis">深度分析</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#solutions">解決方案</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#case-studies">案例研究</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#conclusions">結論建議</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 動態英雄區塊 -->
+        <section class="hero-section d-flex align-items-center text-light">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-8 hero-content">
+                        <h1 class="hero-title mb-4" data-aos="fade-up">
+                            全球貧困問題
+                            <span class="text-primary">深度分析</span>
+                        </h1>
+                        <p class="lead mb-4" data-aos="fade-up" data-aos-delay="200">
+                            透過數據分析與案例研究，深入探討全球貧困問題的現況、成因與解決方案
+                        </p>
+                        <div class="d-flex gap-3" data-aos="fade-up" data-aos-delay="400">
+                            <a href="#overview" class="btn btn-custom">
+                                開始探索
+                                <i class="fas fa-arrow-right ms-2"></i>
+                            </a>
+                            <a href="#methodology" class="btn btn-outline-light">
+                                研究方法
+                                <i class="fas fa-microscope ms-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 研究概覽區塊 -->
+        <section id="overview" class="py-5">
+            <div class="container">
+                <h2 class="text-center display-4 mb-5" data-aos="fade-up">研究概覽</h2>
+                
+                <!-- 關鍵數據展示 -->
+                <div class="row g-4 mb-5">
+                    <div class="col-md-4" data-aos="fade-up">
+                        <div class="data-card">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h3 class="h5 mb-0">全球極端貧困人口</h3>
+                                <i class="fas fa-users fa-2x text-primary"></i>
+                            </div>
+                            <div class="stat-number display-4 mb-2" data-value="689">0</div>
+                            <p class="text-muted">百萬人口 (2023年數據)</p>
+                            <div class="progress mt-3" style="height: 5px;">
+                                <div class="progress-bar bg-primary" style="width: 68.9%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                        <div class="data-card">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h3 class="h5 mb-0">年度減貧率</h3>
+                                <i class="fas fa-chart-line fa-2x text-success"></i>
+                            </div>
+                            <div class="stat-number display-4 mb-2" data-value="2.4">0</div>
+                            <p class="text-muted">全球平均減貧百分比</p>
+                            <div class="progress mt-3" style="height: 5px;">
+                                <div class="progress-bar bg-success" style="width: 24%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
+                        <div class="data-card">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h3 class="h5 mb-0">資源分配不均指數</h3>
+                                <i class="fas fa-balance-scale fa-2x text-warning"></i>
+                            </div>
+                            <div class="stat-number display-4 mb-2" data-value="0.68">0</div>
+                            <p class="text-muted">基尼係數 (0-1)</p>
+                            <div class="progress mt-3" style="height: 5px;">
+                                <div class="progress-bar bg-warning" style="width: 68%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 互動式圖表 -->
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <div class="chart-container" data-aos="fade-up">
+                            <h3 class="h4 mb-4">全球貧困趨勢分析</h3>
+                            <canvas id="povertyTrendChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 深度分析區塊 -->
+        <section id="analysis" class="py-5 bg-light">
+            <div class="container">
+                <h2 class="text-center display-4 mb-5" data-aos="fade-up">深度分析</h2>
+                
+                <!-- 分析卡片 -->
+                <div class="row g-4">
+                    <div class="col-md-6" data-aos="fade-up">
+                        <div class="analysis-card p-4 bg-white rounded-3 shadow-sm h-100">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="icon-box bg-primary bg-opacity-10 p-3 rounded-3 me-3">
+                                    <i class="fas fa-microscope text-primary fa-2x"></i>
+                                </div>
+                                <h3 class="h4 mb-0">研究方法論</h3>
+                            </div>
+                            <p>採用混合研究方                <!-- 分析卡片組 -->
+                <div class="row g-4 mb-5">
+                    <div class="col-md-6" data-aos="fade-up">
+                        <div class="analysis-card data-card h-100">
+                            <h3 class="h4 mb-4">
+                                <i class="fas fa-chart-pie text-primary me-2"></i>
+                                區域分布分析
+                            </h3>
+                            <div class="chart-container mb-3">
+                                <canvas id="regionalDistributionChart"></canvas>
+                            </div>
+                            <div class="analysis-text">
+                                <h4 class="h6 text-primary">關鍵發現</h4>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check-circle me-2"></i>撒哈拉以南非洲地區占比最高</li>
+                                    <li><i class="fas fa-check-circle me-2"></i>南亞地區次之</li>
+                                    <li><i class="fas fa-check-circle me-2"></i>東亞太平洋地區呈現顯著下降趨勢</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="analysis-card data-card h-100">
+                            <h3 class="h4 mb-4">
+                                <i class="fas fa-sitemap text-primary me-2"></i>
+                                成因關聯分析
+                            </h3>
+                            <div id="causationNetwork" class="network-chart mb-3"></div>
+                            <div class="analysis-text">
+                                <h4 class="h6 text-primary">主要影響因素</h4>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-arrow-right me-2"></i>教育資源不均</li>
+                                    <li><i class="fas fa-arrow-right me-2"></i>經濟結構失衡</li>
+                                    <li><i class="fas fa-arrow-right me-2"></i>氣候變遷影響</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 互動式時間軸 -->
+                <div class="timeline-section mt-5">
+                    <h3 class="text-center h3 mb-5" data-aos="fade-up">歷史演變分析</h3>
+                    <div class="timeline">
+                        <div class="timeline-item" data-aos="fade-up">
+                            <div class="timeline-content">
+                                <h4>1990年代</h4>
+                                <p>全球極端貧困人口比例達33.5%</p>
+                                <div class="progress mt-2" style="height: 5px;">
+                                    <div class="progress-bar bg-danger" style="width: 33.5%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-item" data-aos="fade-up">
+                            <div class="timeline-content">
+                                <h4>2000年代</h4>
+                                <p>千禧年發展目標開始實施</p>
+                                <div class="progress mt-2" style="height: 5px;">
+                                    <div class="progress-bar bg-warning" style="width: 25.5%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-item" data-aos="fade-up">
+                            <div class="timeline-content">
+                                <h4>2015年</h4>
+                                <p>聯合國可持續發展目標確立</p>
+                                <div class="progress mt-2" style="height: 5px;">
+                                    <div class="progress-bar bg-info" style="width: 15.7%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-item" data-aos="fade-up">
+                            <div class="timeline-content">
+                                <h4>2023年</h4>
+                                <p>當前全球貧困現況與挑戰</p>
+                                <div class="progress mt-2" style="height: 5px;">
+                                    <div class="progress-bar bg-success" style="width: 8.4%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 解決方案展示 -->
+        <section id="solutions" class="py-5">
+            <div class="container">
+                <h2 class="text-center display-4 mb-5" data-aos="fade-up">解決方案</h2>
+                
+                <!-- 3D 解決方案卡片 -->
+                <div class="row g-4">
+                    <div class="col-lg-4" data-aos="fade-up">
+                        <div class="feature-card data-card">
+                            <div class="icon-wrapper mb-4">
+                                <i class="fas fa-graduation-cap fa-3x text-primary"></i>
+                            </div>
+                            <h3 class="h4">教育賦能</h3>
+                            <p>提供優質教育資源，培養技能發展</p>
+                            <ul class="list-unstyled mt-3">
+                                <li><i class="fas fa-check text-success me-2"></i>職業技能培訓</li>
+                                <li><i class="fas fa-check text-success me-2"></i>數位教育普及</li>
+                                <li><i class="fas fa-check text-success me-2"></i>教育資源下沉</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                        <div class="feature-card data-card">
+                            <div class="icon-wrapper mb-4">
+                                <i class="fas fa-hand-holding-usd fa-3x text-success"></i>
+                            </div>
+                            <h3 class="h4">金融包容</h3>
+                            <p>擴大金融服務覆蓋，促進普惠金融</p>
+                            <ul class="list-unstyled mt-3">
+                                <li><i class="fas fa-check text-success me-2"></i>小額信貸服務</li>
+                                <li><i class="fas fa-check text-success me-2"></i>數字支付普及</li>
+                                <li><i class="fas fa-check text-success me-2"></i>金融教育推廣</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="400">
+                        <div class="feature-card data-card">
+                            <div class="icon-wrapper mb-4">
+                                <i class="fas fa-seedling fa-3x text-warning"></i>
+                            </div>
+                            <h3 class="h4">可持續發展</h3>
+                            <p>推動綠色經濟轉型，創造就業機會</p>
+                            <ul class="list-unstyled mt-3">
+                                <li><i class="fas fa-check text-success me-2"></i>清潔能源項目</li>
+                                <li><i class="fas fa-check text-success me-2"></i>生態農業發展</li>
+                                <li><i class="fas fa-check text-success me-2"></i>循環經濟推廣</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 互動式案例研究 -->
+        <section id="case-studies" class="py-5 bg-light">
+            <div class="container">
+                <h2 class="text-center display-4 mb-5" data-aos="fade-up">案例研究</h2>
+                
+                <!-- 案例輪播 -->
+                <div class="swiper case-studies-slider">
+                    <div class="swiper-wrapper">
+                        <!-- 案例1 -->
+                        <div class="swiper-slide">
+                            <div class="case-study-card data-card">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <img src="https://example.com/case1.jpg" alt="孟加拉小額信貸案例" 
+                                              class="img-fluid rounded">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h3 class="h4 mb-3">孟加拉小額信貸革新</h3>
+                                        <p class="mb-4">通過創新金融模式，幫助低收入群體實現創業夢想</p>
+                                        <div class="success-metrics">
+                                            <div class="metric mb-3">
+                                                <label>受益人數</label>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-success" style="width: 85%">
+                                                        850萬人
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="metric mb-3">
+                                                <label>脫貧率</label>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-primary" style="width: 72%">
+                                                        72%
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 更多案例... -->
+                    </div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 結論與建議 -->
+        <section id="conclusions" class="py-5">
+            <div class="container">
+                <h2 class="text-center display-4 mb-5" data-aos="fade-up">結論與建議</h2>
+                
+                <div class="row g-4">
+                    <div class="col-md-6" data-aos="fade-up">
+                        <div class="data-card h-100">
+                            <h3 class="h4 mb-4">主要發現</h3>
+                            <div class="findings-list">
+                                <div class="finding-item mb-3">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-lightbulb text-warning me-2"></i>
+                                        <h4 class="h6 mb-0">貧困的多維度特性</h4>
+                                    </div>
+                                    <p class="text-muted">貧困不僅限於收入層面，還包括教育、醫療、住房等多個維度</p>
+                                </div>
+                                <div class="finding-item mb-3">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-chart-line text-success me-2"></i>
+                                        <h4 class="h6 mb-0">區域發展不均衡</h4>
+                                    </div>
+                                    <p class="text-muted">不同地區的貧困程度和特徵存在顯著差異</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="data-card h-100">
+                            <h3 class="h4 mb-4">政策建議</h3>
+                            <div class="recommendations-list">
+                                <div class="recommendation-item mb-3">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-tasks text-primary me-2"></i>
+                                        <h4 class="h6 mb-0">精準扶貧</h4>
+                                    </div>
+                                    <p class="text-muted">根據不同地區特點制定針對性援助方案</p>
+                                </div>
+                                <div class="recommendation-item mb-3">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-handshake text-info me-2"></i>
+                                        <h4 class="h6 mb-0">國際合作</h4>
+                                    </div>
+                                    <p class="text-muted">加強全球合作，共同應對貧困挑戰</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 引用參考文獻 -->
+        <section class="py-5 bg-light">
+            <div class="container">
+                <h2 class="text-center h3 mb-5" data-aos="fade-up">參考文獻</h2>
+                
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="data-card">
+                            <div class="references-list">
+                                <div class="reference-item mb-3">
+                                    <p class="mb-1">
+                                        <strong>World Bank. (2023).</strong> 
+                                        "Poverty and Shared Prosperity 2023: Adapting to a Changing World"
+                                    </p>
+                                    <small class="text-muted">World Bank Publications</small>
+                                </div>
+                                <div class="reference-item mb-3">
+                                                                    <p class="mb-1"></p>
+                                        <strong>United Nations. (2023).</strong>
+                                        "The Sustainable Development Goals Report 2023"
+                                    </p>
+                                    <small class="text-muted">United Nations Publications</small>
+                                </div>
+                                <div class="reference-item mb-3">
+                                    <p class="mb-1">
+                                        <strong>IMF. (2023).</strong>
+                                        "Global Economic Outlook: Challenges and Opportunities"
+                                    </p>
+                                    <small class="text-muted">International Monetary Fund</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 頁腳 -->
+        <footer class="py-4 bg-dark text-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-0">© 2024 全球貧困研究報告. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <a href="#" class="text-light me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-light me-3"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- JavaScript 引入 -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.0.0/d3.min.js"></script>
+
+        <script>
+            // 初始化 AOS 動畫
+            AOS.init({
+                duration: 1000,
+                once: true
+            });
+
+            // 數字動畫效果
+            function animateValue(obj, start, end, duration) {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    obj.innerHTML = Math.floor(progress * (end - start) + start);
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }
+
+            // 初始化統計數字動畫
+            document.querySelectorAll('.stat-number').forEach(element => {
+                const value = parseFloat(element.dataset.value);
+                animateValue(element, 0, value, 2000);
+            });
+
+            // 貧困趨勢圖表
+            const ctx = document.getElementById('povertyTrendChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['1990', '1995', '2000', '2005', '2010', '2015', '2020', '2023'],
+                    datasets: [{
+                        label: '全球極端貧困人口比例 (%)',
+                        data: [36.2, 29.8, 27.7, 21.3, 15.7, 10.1, 9.3, 8.4],
+                        borderColor: '#2196F3',
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: 'rgba(33, 150, 243, 0.1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: '全球極端貧困人口比例變化趨勢 (1990-2023)'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '貧困人口比例 (%)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 區域分布圖表
+            const ctxRegional = document.getElementById('regionalDistributionChart').getContext('2d');
+            new Chart(ctxRegional, {
+                type: 'doughnut',
+                data: {
+                    labels: ['撒哈拉以南非洲', '南亞', '東亞太平洋', '拉丁美洲', '中東北非', '歐洲中亞'],
+                    datasets: [{
+                        data: [42, 22, 15, 10, 7, 4],
+                        backgroundColor: [
+                            '#FF6384',
+                            '#36A2EB',
+                            '#FFCE56',
+                            '#4BC0C0',
+                            '#9966FF',
+                            '#FF9F40'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        },
+                        title: {
+                            display: true,
+                            text: '全球貧困人口區域分布'
+                        }
+                    }
+                }
+            });
+
+            // 案例研究輪播
+            new Swiper('.case-studies-slider', {
+                slidesPerView: 1,
+                spaceBetween: 30,
+                loop: true,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev'
+                },
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false
+                }
+            });
+
+            // 平滑滾動
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // 導航欄滾動效果
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 100) {
+                    navbar.classList.add('shadow');
+                } else {
+                    navbar.classList.remove('shadow');
+                }
+            });
+
+            // 網絡圖可視化
+            const networkData = {
+                nodes: [
+                    { id: "貧困", group: 1 },
+                    { id: "教育", group: 2 },
+                    { id: "就業", group: 2 },
+                    { id: "醫療", group: 2 },
+                    { id: "基礎設施", group: 3 }
+                ],
+                links: [
+                    { source: "貧困", target: "教育", value: 1 },
+                    { source: "貧困", target: "就業", value: 1 },
+                    { source: "教育", target: "就業", value: 2 },
+                    { source: "貧困", target: "醫療", value: 1 },
+                    { source: "醫療", target: "基礎設施", value: 2 }
+                ]
+            };
+
+            // 初始化網絡圖
+            const width = 400;
+            const height = 300;
+
+            const svg = d3.select("#causationNetwork")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            const simulation = d3.forceSimulation(networkData.nodes)
+                .force("link", d3.forceLink(networkData.links).id(d => d.id))
+                .force("charge", d3.forceManyBody().strength(-100))
+                .force("center", d3.forceCenter(width / 2, height / 2));
+
+            const link = svg.append("g")
+                .selectAll("line")
+                .data(networkData.links)
+                .join("line")
+                .attr("stroke", "#999")
+                .attr("stroke-opacity", 0.6);
+
+            const node = svg.append("g")
+                .selectAll("circle")
+                .data(networkData.nodes)
+                .join("circle")
+                .attr("r", 5)
+                .attr("fill", d => d.group === 1 ? "#ff0000" : d.group === 2 ? "#00ff00" : "#0000ff");
+
+            simulation.on("tick", () => {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                node
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+            });
+        </script>
+    </body>
+    </html>

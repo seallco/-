@@ -13,157 +13,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.0/dist/vanilla-tilt.min.js"></script>
-   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  
-  <style>
-    :root {
-      --primary: #E31837;
-      --secondary: #FFC107;
-      --dark: #1a202c;
-    }
-    
-    body {
-      font-family: 'Noto Sans TC', sans-serif;
-      background-color: var(--dark);
-      color: #ffffff;
-      overflow-x: hidden;
-    }
-
-    .gradient-text {
-      background: linear-gradient(45deg, var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .parallax-section {
-      height: 100vh;
-      position: relative;
-      overflow: hidden;
-      perspective: 1000px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .hero-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      z-index: 10;
-    }
-
-    .earth-container {
-      width: 400px;
-      height: 400px;
-      margin-left: 2rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    #earthCanvas {
-      width: 100%;
-      height: 100%;
-    }
-
-    .scroll-indicator {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 3px;
-      background: var(--primary);
-      z-index: 1000;
-    }
-  </style>
-</head>
-<body>
-  <!-- 滾動進度條 -->
-  <div class="scroll-indicator" id="scrollIndicator"></div>
-
-  <!-- 英雄區塊 -->
-  <section class="parallax-section" id="hero">
-    <div class="relative container mx-auto px-4 h-full flex items-center justify-center">
-      <div class="hero-content">
-        <h1 class="text-6xl font-bold mb-6 gradient-text" data-aos="zoom-in">
-          SDG 1：消除貧窮
-        </h1>
-        <p class="text-2xl mb-8" data-aos="fade-up" data-aos-delay="200">
-          攜手共創無貧窮的未來世界
-        </p>
-      </div>
-      <!-- 自轉地球 -->
-      <div class="earth-container" data-aos="fade-left" data-aos-delay="300">
-        <canvas id="earthCanvas"></canvas>
-      </div>
-    </div>
-  </section>
-
-  <!-- JavaScript -->
-  <script>
-    // 初始化 AOS
-    AOS.init({
-      duration: 1000,
-      once: true
-    });
-
-    // 滾動進度條
-    window.addEventListener('scroll', () => {
-      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      document.getElementById('scrollIndicator').style.width = scrolled + '%';
-    });
-
-    // 自轉地球
-    const canvas = document.getElementById('earthCanvas');
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-
-    // 地球紋理
-    const textureLoader = new THREE.TextureLoader();
-    const earthTexture = textureLoader.load('https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg');
-    const normalMap = textureLoader.load('https://threejs.org/examples/textures/planets/earth_normal_2048.jpg');
-    const specularMap = textureLoader.load('https://threejs.org/examples/textures/planets/earth_specular_2048.jpg');
-
-    const earthGeometry = new THREE.SphereGeometry(2, 64, 64);
-    const earthMaterial = new THREE.MeshPhongMaterial({
-      map: earthTexture,
-      normalMap: normalMap,
-      specularMap: specularMap,
-      shininess: 10
-    });
-    const earth = new THREE.Mesh(earthGeometry, earthMaterial);
-    scene.add(earth);
-
-    // 光源
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
-
-    const pointLight = new THREE.PointLight(0xffffff, 1);
-    pointLight.position.set(5, 3, 5);
-    scene.add(pointLight);
-
-    camera.position.z = 5;
-
-    // 動畫循環
-    function animate() {
-      requestAnimationFrame(animate);
-      earth.rotation.y += 0.005; // 自轉速度
-      renderer.render(scene, camera);
-    }
-    animate();
-  </script>
   
   <style>
     :root {
@@ -284,16 +133,10 @@
     <div class="relative container mx-auto px-4 h-full flex items-center">
       <div class="text-center w-full">
         <h1 class="text-6xl font-bold mb-6 gradient-text" data-aos="zoom-in">
-          <ul>SDG 1 是聯合國永續發展目標的第一個目標 </ul>
-          <Ul> ----------------------------------------------------------</Ul>
-          <ul>核心理念:</ul>
-          <ul>1.在全球範圍內消除一切形式的貧窮</ul>
-          <ul>2.確保所有人都能享有基本的生活水準</ul>
-          <ul>3.透過全球合作來實現無貧窮的願景</ul>
-        </h1>
+          SDG 1：消除貧窮
         </h1>
         <p class="text-2xl mb-8" data-aos="fade-up" data-aos-delay="200">
-          
+          攜手共創無貧窮的未來世界
         </p>
         <div class="floating">
           <svg class="w-8 h-8 mx-auto text-white animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">

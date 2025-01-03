@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全球貧窮危機：我們不能袖手旁觀</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #E5243B;
+            --secondary-color: #FF9F1C;
+            --text-color: #2D3436;
+            --light-bg: #F5F6FA;
+            --dark-bg: #2D3436;
+        }
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+        
+        /* 全屏視差效果英雄區 */
+        .parallax-hero {
+            height: 100vh;
+            perspective: 1px;
+            transform-style: preserve-3d;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        
+        .parallax-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            transform-origin: 0 0;
+        }
+        
+        .parallax-background {
+            transform: translateZ(-1px) scale(2);
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                        url('https://www.un.org/sustainabledevelopment/wp-content/uploads/2017/12/SouthSudan_2016_UN036242.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+        }
+        
+        .parallax-content {
+            transform: translateZ(0);
+            position: relative;
+            background-color: transparent;
+            color: white;
+            padding-top: 40vh;
+        }
+        
+        /* 創新統計卡片 */
+        .stat-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary-color);
+        }
+        
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        /* 互動式時間軸 */
+        .timeline {
+            position: relative;
+            padding: 4rem 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary-color);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            margin-bottom: 4rem;
+            position: relative;
+        }
+        
+        .timeline-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+            position: relative;
+            width: calc(50% - 30px);
+            margin-left: auto;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: 0;
+            margin-right: auto;
+        }
+        
+        /* 3D 卡片效果 */
+        .crisis-card {
+            perspective: 1000px;
+            margin-bottom: 2rem;
+        }
+        
+        .crisis-card-inner {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        
+        .crisis-card:hover .crisis-card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .crisis-card-front,
+        .crisis-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        
+        .crisis-card-front {
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .crisis-card-back {
+            background: var(--primary-color);
+            color: white;
+            transform: rotateY(180deg);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        /* 動態數據視覺化 */
+        .chart-container {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        /* 互動式解決方案網格 */
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+        
+        .solution-item {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.4s ease;
+        }
+        
+        .solution-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .solution-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .solution-content {
+            padding: 2rem;
+        }
+        
+        /* 故事輪播 */
+        .story-slider {
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+        }
+        
+        .story-slide {
+            position: relative;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 4rem;
+        }
+        
+        .story-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8));
+        }
+        
+        /* 互動式按鈕 */
+        .action-button {
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .action-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(255,255,255,0.1);
+            transform: translate(-50%, -50%) rotate(45deg);
+            transition: all 0.6s ease;
+        }
+        
+        .action-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(229, 36, 59, 0.3);
+        }
+        
+        .action-button:hover::before {
+            transform: translate(-50%, -50%) rotate(45deg) scale(1.5);
+        }
+        
+        /* 進度指標 */
+        .progress-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-color);
+            width: 0;
+            transition: width 0.3s ease;
+        }
+        
+        /* 響應式調整 */
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-content {
+                width: calc(100% - 50px);
+                margin-left: 50px;
+            }
+            
+            .timeline-item:nth-child(even) .timeline-content {
+                margin-left: 50px;
+            }
+            
+            .stat-number {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 進度指標 -->
+    <div class="progress-indicator">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    
+    <!-- 全屏視差英雄區 -->
+    <section class="parallax-hero">
+        <div class="parallax-layer parallax-background"></div>
+        <div class="parallax-layer parallax-content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <h1 class="display-1 mb-4" data-aos="fade-up">
+                            全球貧窮危機
+                            <br>
+                            <span class="text-warning">刻不容緩</span>
+                        </h1>
+                        <p class="lead mb-5" data-aos="fade-up" data-aos-delay="200">
+                            每一秒鐘，都有人在極端貧窮中掙扎。
+                            <br>
+                            現在就是行動的時候。
+                        </p>
+                        <button class="action-button" data-aos="fade-up" data-aos-delay="400">
+                            了解更多 <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 關鍵數據區 -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="display-4 text-center mb-5" data-aos="fade-up">全球貧窮現況</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="stat-card" data-aos="fade-up">
+                        <div class="stat-number" id="povertyCounter">7億+</div>
+                        <h3>極端貧窮人口</h3>
+                        <p>每天生活費用低於1.90美元</p>
+                        <div class="progress mt-3" style="height: 10px;">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 70%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="stat-number" id="childrenCounter">3.56億</div>
+                        <h3>貧困兒童</h3>
+                        <p>生活在極端貧窮中的兒童數量</p>
+                        <div class="progress mt-3" style="height: 10px;">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 85%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="400">
+                        <div class="stat-number" id="healthcareCounter">40%</div>
+                        <h3>醫療資源缺乏</h3>
+                        <p>無法獲得基本醫療服務的人口比例</p>
+                        <div class="progress mt-3" style="height: 10px;">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 40%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 危機區域展示 -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="display-4 text-center mb-5" data-aos="fade-up">全球危機熱點</h2>
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="crisis-card" data-aos="fade-right">
+                        <div class="crisis-card-inner">
+                            <div class="crisis-card-front" style="background-image: url('https://care.org/wp-content/uploads/2020/05/RS62161_IMG_4308-lpr-1-1024x682.jpg');">
+                                <div class="story-overlay"></div>
+                                <div class="p-4 position-absolute bottom-0 text-white">
+                                    <h3>撒哈拉以南非洲</h3>
+                                    <p>該地區面臨最嚴重的貧困挑戰</p>
+                                </div>
+                            </div>
+                            <div class="crisis-card-back">
+                                <h3>關鍵數據</h3>
+                                <ul class="list-unstyled">
+                                    <li>✦ 極端貧困人口比例：41%</li>
+                                    <li>✦ 營養不良兒童：3000萬+</li>
+                                    <li>✦ 缺乏清潔用水人口：4億+</li>
+                                </ul>
+                                <p class="mt-3">氣候變遷、衝突和疫情的三重打擊，使得情況更加嚴峻。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="crisis-card" data-aos="fade-left">
+                        <div class="crisis-card-inner">
+                            <div class="crisis-card-front" style="background-image: url('https://www.unhcr.ca/wp-content/uploads/2021/08/afghanistan-press-release.jpg');">
+                                <div class="story-overlay"></div>
+                                <div class="p-4 position-absolute bottom-0 text-white">
+                                    <h3>南亞地區</h3>
+                                    <p>貧困與性別不平等的雙重挑戰</p>
+                                </div>
+                            </div>
+                            <div class="crisis-card-back">
+                                <h3>重要議題</h3>
+                                <ul class="list-unstyled">
+                                    <li>✦ 女性識字率：低於60%</li>
+                                    <li>✦ 童工問題：1800萬兒童</li>
+                                    <li>✦ 醫療資源不足：45%人口</li>
+                                </ul>
+                                <p class="mt-3">需要全面的教育與性別平等計劃支持。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 互動式解決方案 -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="display-4 text-center mb-5" data-aos="fade-up">永續解決方案</h2>
+            <div class="solution-grid">
+                <div class="solution-item" data-aos="fade-up">
+                    <img src="https://borgenproject.org/wp-content/uploads/Prevention-Provides-Healthcare-to-the-World%E2%80%99s-Poor.jpg" class="solution-image" alt="教育賦權">
+                    <div class="solution-content">
+                        <h3>教育賦權</h3>
+                        <p>提供優質教育機會，打破貧困循環</p>
+                        <ul class="mt-3">
+                            <li>建立數位學習中心</li>
+                            <li>職業技能培訓</li>
+                            <li>女性教育計劃</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="solution-item" data-aos="fade-up" data-aos-delay="200">
+                    <img src="https://adra.org/wp-content/uploads/2023/01/Day-6-03280-scaled.jpg" class="solution-image" alt="永續農業">
+                    <div class="solution-content">
+                        <h3>永續農業</h3>
+                        <p>改善糧食安全，提升農業生產力</p>
+                        <ul class="mt-3">
+                            <li>智慧農業技術</li>
+                            <li>農民合作社</li>
+                            <li>有機耕作推廣</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="solution-item" data-aos="fade-up" data-aos-delay="400">
+                    <img src="https://s3.amazonaws.com/blog.oxfamamerica.org/firstperson/2015/06/nepal-earthquake-oxfam-hygiene-kits-92176.jpg" class="solution-image" alt="醫療照護">
+                    <div class="solution-content">
+                        <h3>醫療照護</h3>
+                        <p>確保基本醫療服務可及性</p>
+                        <ul class="mt-3">
+                            <li>行動醫療團隊</li>
+                            <li>遠距醫療服務</li>
+                            <li>社區衛生教育</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 即時數據視覺化 -->
+    <section class="py-5">
+        <div class="container">
+          
+            <h2 class="display-4 text-center mb-5" data-aos="fade-up">全球貧困趨勢分析</h2>
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="chart-container" data-aos="fade-up">
+                        <canvas id="povertyTrendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 行動呼籲 -->
+    <section class="py-5 bg-dark text-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="display-4 mb-4" data-aos="fade-up">一起創造改變</h2>
+                    <p class="lead mb-5" data-aos="fade-up" data-aos-delay="200">
+                        每個人都能為消除貧困做出貢獻。
+                        <br>
+                        現在就開始行動，共同建立一個更公平的世界。
+                    </p>
+                    <button class="action-button" data-aos="fade-up" data-aos-delay="400">
+                        立即參與 <i class="fas fa-heart ms-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 必要的 JS 引入 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    
+    <script>
+        // 初始化 AOS 動畫
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        // 進度條控制
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+        });
+
+        // 貧困趨勢圖表
+        const ctx = document.getElementById('povertyTrendChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022'],
+                datasets: [{
+                    label: '全球極端貧困人口（億）',
+                    data: [7.36, 7.15, 6.89, 6.56, 6.48, 7.11, 6.98, 6.85],
+                    borderColor: '#E5243B',
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: 'rgba(229, 36, 59, 0.1)'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: '2015-2022年全球極端貧困人口變化趨勢'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+
+        // 數字動畫效果
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString() + '+';
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // 觸發數字動畫
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (entry.target.id === 'povertyCounter') {
+                        animateValue('povertyCounter', 0, 700, 2000);
+                    } else if (entry.target.id === 'childrenCounter') {
+                        animateValue('childrenCounter', 0, 356, 2000);
+                    }
+                }
+            });
+        });
+
+        document.querySelectorAll('.stat-number').forEach((el) => observer.observe(el));
+    </script>
+</body>
+</html>

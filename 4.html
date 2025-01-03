@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDG 1: 消除貧窮 - 互動式簡報</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/countup.js@2.0.7/dist/countUp.min.js"></script>
+    <style>
+        .slide {
+            display: none;
+            height: 100vh;
+            padding: 2rem;
+            animation: fadeIn 1s;
+        }
+        .slide.active {
+            display: block;
+        }
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #E5243B, #FF6B6B);
+            transition: width 0.3s;
+        }
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #E5243B, #FF6B6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: countUp 2s ease-out;
+        }
+        .card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(229, 36, 59, 0.2);
+        }
+        .gradient-text {
+            background: linear-gradient(45deg, #E5243B, #FF6B6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 2rem;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: #E5243B;
+        }
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: -4px;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #E5243B;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <!-- 封面頁 -->
+    <div class="slide active bg-gradient-to-br from-red-500 via-red-600 to-red-700">
+        <div class="container mx-auto text-center text-white py-12">
+            <div class="floating">
+                <img src="https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-01.jpg" 
+                     alt="SDG 1 Icon" 
+                     class="mx-auto w-72 mb-8">
+            </div>
+            <h1 class="text-7xl font-bold mb-8 animate__animated animate__fadeInDown">
+                SDG 1: 消除貧窮
+            </h1>
+            <p class="text-3xl mb-8 animate__animated animate__fadeInUp">
+                攜手共創無貧世界，實現永續發展
+            </p>
+            <div class="grid grid-cols-3 gap-6 mt-12">
+                <div class="bg-white bg-opacity-20 p-6 rounded-xl">
+                    <h3 class="text-4xl font-bold">2030</h3>
+                    <p>目標年</p>
+                </div>
+                <div class="bg-white bg-opacity-20 p-6 rounded-xl">
+                    <h3 class="text-4xl font-bold">17</h3>
+                    <p>永續目標</p>
+                </div>
+                <div class="bg-white bg-opacity-20 p-6 rounded-xl">
+                    <h3 class="text-4xl font-bold">169</h3>
+                    <p>具體目標</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全球貧窮危機 -->
+    <div class="slide bg-white">
+        <div class="container mx-auto">
+            <h2 class="text-5xl font-bold mb-12 gradient-text">全球貧窮危機</h2>
+            <div class="grid grid-cols-2 gap-8 mb-12">
+                <div class="card p-8">
+                    <canvas id="povertyTrendChart"></canvas>
+                </div>
+                <div class="space-y-6">
+                    <div class="card p-6">
+                        <div class="stat-number" id="extremePoverty">689M</div>
+                        <p class="text-xl text-gray-600">極端貧窮人口</p>
+                    </div>
+                    <div class="card p-6">
+                        <div class="stat-number" id="childPoverty">356M</div>
+                        <p class="text-xl text-gray-600">貧窮兒童人口</p>
+                    </div>
+                    <div class="card p-6">
+                        <div class="stat-number" id="dailyIncome">$1.90</div>
+                        <p class="text-xl text-gray-600">國際貧窮線標準</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 貧窮的根源分析 -->
+    <div class="slide bg-gray-50">
+        <div class="container mx-auto">
+            <h2 class="text-5xl font-bold mb-12 gradient-text">貧窮的根源分析</h2>
+            <div class="grid grid-cols-3 gap-8">
+                <div class="card p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-red-600">結構性因素</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+                            資源分配不均
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+                            社會不平等
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+                            政策缺失
+                        </li>
+                    </ul>
+                </div>
+                <div class="card p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-red-600">環境因素</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+                            氣候變遷
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+                            自然災害
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+                            資源枯竭
+                        </li>
+                    </ul>
+                </div>
+                <div class="card p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-red-600">社會因素</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+                            教育不平等
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+                            性別歧視
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+                            健康照護缺乏
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全球行動計畫 -->
+    <div class="slide bg-white">
+        <div class="container mx-auto">
+            <h2 class="text-5xl font-bold mb-12 gradient-text">全球行動計畫</h2>
+            <div class="grid grid-cols-2 gap-12">
+                <div class="space-y-8">
+                    <div class="timeline-item card p-6">
+                        <h3 class="text-2xl font-bold text-red-600">短期目標 (2025)</h3>
+                        <p class="mt-4">建立全球性的基本收入保障機制</p>
+                        <div class="mt-4 bg-red-50 p-4 rounded-lg">
+                            <div class="flex justify-between">
+                                <span>完成進度</span>
+                                <span>45%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                                <div class="bg-red-600 h-2.5 rounded-full" style="width: 45%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-item card p-6">
+                        <h3 class="text-2xl font-bold text-red-600">中期目標 (2027)</h3>
+                        <p class="mt-4">減少50%的極端貧窮人口</p>
+                        <div class="mt-4 bg-red-50 p-4 rounded-lg">
+                            <div class="flex justify-between">
+                                <span>完成進度</span>
+                                <span>30%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                                <div class="bg-red-600 h-2.5 rounded-full" style="width: 30%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-item card p-6">
+                        <h3 class="text-2xl font-bold text-red-600">長期目標 (2030)</h3>
+                        <p class="mt-4">完全消除極端貧窮</p>
+                        <div class="mt-4 bg-red-50 p-4 rounded-lg">
+                            <div class="flex justify-between">
+                                <span>完成進度</span>
+                                <span>15%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                                <div class="bg-red-600 h-2.5 rounded-full" style="width: 15%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card p-8">
+                    <canvas id="actionPlanChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 創新解決方案 -->
+    <div class="slide bg-gray-50">
+        <div class="container mx-auto">
+            <h2 class="text-5xl font-bold mb-12 gradient-text">創新解決方案</h2>
+            <div class="grid grid-cols-3 gap-8">
+                <div class="card p-8 hover:bg-red-50 transition-colors">
+                    <h3 class="text-2xl font-bold mb-6 text-red-600">數位金融包容</h3>
+                    <ul class="space-y-4">
+                        <li>行動支付系統</li>
+                        <li>微型貸款平台</li>
+                        <li>區塊鏈技術應用</li>
+                        <li>普惠金融服務</li>
+                    </ul>
+                </div>
+                <div class="card p-8 hover:bg-red-50 transition-colors">
+                    <h3 class="text-2xl font-bold mb-6 text-red-600">永續農業發展</h3>
+                    <ul class="space-y-4">
+                        <li>智慧農業技術</li>
+                        <li>農業保險制度</li>
+                        <li>有機耕作推廣</li>
+                        <li>農產品價值鏈</li>
+                    </ul>
+                </div>
+                <div class="card p-8 hover:bg-red-50 transition-colors">
+                    <h3 class="text-2xl font-bold mb-6 text-red-600">社會創新模式</h3>
+                    <ul class="space-y-4">
+                        <li>社會企業發展</li>
+                        <li>技能培訓計畫</li>
+                        <li>社區賦權方案
+                                                  <li>永續生計計畫</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-12 card p-8">
+                <h3 class="text-3xl font-bold mb-8 text-center gradient-text">創新方案效益分析</h3>
+                <canvas id="innovationImpactChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- 區域焦點 -->
+    <div class="slide bg-white">
+        <div class="container mx-auto">
+            <h2 class="text-5xl font-bold mb-12 gradient-text">全球區域焦點</h2>
+            <div class="grid grid-cols-2 gap-8">
+                <div class="card p-8">
+                    <canvas id="regionalPovertyChart"></canvas>
+                </div>
+                <div class="space-y-6">
+                    <div class="card p-6 hover:bg-red-50">
+                        <h3 class="text-2xl font-bold text-red-600">撒哈拉以南非洲</h3>
+                        <p class="mt-4">極端貧窮人口比例最高，需要特別關注</p>
+                        <div class="mt-4 flex items-center">
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-red-600 h-2.5 rounded-full" style="width: 85%"></div>
+                            </div>
+                            <span class="ml-4">85%</span>
+                        </div>
+                    </div>
+                    <div class="card p-6 hover:bg-red-50">
+                        <h3 class="text-2xl font-bold text-red-600">南亞地區</h3>
+                        <p class="mt-4">貧窮人口數量最多的區域</p>
+                        <div class="mt-4 flex items-center">
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-red-600 h-2.5 rounded-full" style="width: 65%"></div>
+                            </div>
+                            <span class="ml-4">65%</span>
+                        </div>
+                    </div>
+                    <div class="card p-6 hover:bg-red-50">
+                        <h3 class="text-2xl font-bold text-red-600">東亞太平洋</h3>
+                        <p class="mt-4">貧窮減少速度最快的區域</p>
+                        <div class="mt-4 flex items-center">
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-red-600 h-2.5 rounded-full" style="width: 35%"></div>
+                            </div>
+                            <span class="ml-4">35%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 永續發展目標整合 -->
+    <div class="slide bg-gray-50">
+        <div class="container mx-auto">
+            <h2 class="text-5xl font-bold mb-12 gradient-text">SDGs 目標整合</h2>
+            <div class="grid grid-cols-3 gap-8">
+                <div class="card p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-red-600">與其他SDGs的關聯</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <img src="https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-02.jpg" class="w-12 h-12 mr-4">
+                            <span>消除飢餓</span>
+                        </div>
+                        <div class="flex items-center">
+                            <img src="https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-03.jpg" class="w-12 h-12 mr-4">
+                            <span>健康與福祉</span>
+                        </div>
+                        <div class="flex items-center">
+                            <img src="https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-04.jpg" class="w-12 h-12 mr-4">
+                            <span>優質教育</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-red-600">協同效應</h3>
+                    <canvas id="synergiesChart"></canvas>
+                </div>
+                <div class="card p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-red-600">整合策略</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+                            跨部門合作
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+                            資源整合運用
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+                            政策協調一致
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 行動呼籲 -->
+    <div class="slide bg-gradient-to-br from-red-500 via-red-600 to-red-700">
+        <div class="container mx-auto text-white">
+            <h2 class="text-5xl font-bold mb-12 text-center">攜手行動，消除貧窮</h2>
+            <div class="grid grid-cols-3 gap-8">
+                <div class="bg-white bg-opacity-20 p-8 rounded-xl backdrop-blur-md">
+                    <h3 class="text-2xl font-bold mb-6">個人行動</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-white rounded-full mr-3"></span>
+                            支持公平貿易
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-white rounded-full mr-3"></span>
+                            志願服務參與
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-white rounded-full mr-3"></span>
+                            永續消費選擇
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-white rounded-full mr-3"></span>
+                            教育資源分享
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-white bg-opacity-20 p-8 rounded-xl backdrop-blur-md">
+                    <h3 class="text-2xl font-bold mb-6">企業責任</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-white rounded-full mr-3"></span>
+                            創造就業機會
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-white rounded-full mr-3"></span>
+                            公平薪資政策
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-white rounded-full mr-3"></span>
+                            社會企業投資
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-white rounded-full mr-3"></span>
+                            技能培訓計畫
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-white bg-opacity-20 p-8 rounded-xl backdrop-blur-md">
+                    <h3 class="text-2xl font-bold mb-6">政府政策</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-white rounded-full mr-3"></span>
+                            社會福利體系
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-white rounded-full mr-3"></span>
+                            普惠金融政策
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-white rounded-full mr-3"></span>
+                            教育投資增加
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-white rounded-full mr-3"></span>
+                            區域發展平衡
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 初始化圖表
+        function initCharts() {
+            // 貧窮趨勢圖表
+            new Chart(document.getElementById('povertyTrendChart'), {
+                type: 'line',
+                data: {
+                    labels: ['2015', '2016', '2017', '2018', '2019', '2020', '2021'],
+                    datasets: [{
+                        label: '全球極端貧窮人口（百萬）',
+                        data: [736, 720, 689, 656, 630, 689, 698],
+                        borderColor: '#E5243B',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '全球極端貧窮趨勢'
+                        }
+                    }
+                }
+            });
+
+            // 區域貧窮分布圖
+            new Chart(document.getElementById('regionalPovertyChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['撒哈拉以南非洲', '南亞', '東亞太平洋', '拉丁美洲', '其他'],
+                    datasets: [{
+                        data: [41, 35, 10, 8, 6],
+                        backgroundColor: [
+                            '#E5243B',
+                            '#FF6B6B',
+                            '#4A90E2',
+                            '#50E3C2',
+                            '#F5A623'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '全球貧窮人口區域分布(%)'
+                        }
+                    }
+                }
+            });
+
+            // 創新影響力圖表
+            new Chart(document.getElementById('innovationImpactChart'), {
+                type: 'radar',
+                data: {
+                    labels: ['經濟效益', '社會影響', '環境永續', '技術創新', '制度變革'],
+                    datasets: [{
+                        label: '數位金融',
+                        data: [90, 85, 70, 95, 80],
+                        borderColor: '#E5243B'
+                    }, {
+                        label: '永續農業',
+                        data: [75, 90, 95, 80, 85],
+                        borderColor: '#4A90E2'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 100
+                        }
+                    }
+                }
+            });
+
+            // 協同效應圖表
+            new Chart(document.getElementById('synergiesChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['SDG 2', 'SDG 3', 'SDG 4', 'SDG 8'],
+                    datasets: [{
+                        label: '協同效應強度',
+                        data: [90, 85, 80, 95],
+                        backgroundColor: '#E5243B'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // 初始化計數動畫
+        function initCounters() {
+            const options = {
+                duration: 2.5,
+                useEasing: true
+            };
+            
+            new CountUp('extremePoverty', 0, 689, 0, options).start();
+            new CountUp('childPoverty', 0, 356, 0, options).start();
+            new CountUp('dailyIncome', 0, 1.90, 2, options).start();
+        }
+
+        // 投影片控制
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function updateProgressBar() {
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            updateProgressBar();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') showSlide(currentSlide + 1);
+            if (e.key === 'ArrowLeft') showSlide(currentSlide - 1);
+        });
+
+        // 初始化
+        window.onload = function() {
+            updateProgressBar();
+            initCharts();
+            initCounters();
+        };
+    </script>
+</body>
+</html>
