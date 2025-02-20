@@ -288,9 +288,155 @@
                 left: -1.5rem;
             }
         }
+        
     </style>
+<style>
+    .fixed-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: rgba(22, 33, 62, 0.85); /* 深色半透明背景 */
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 1000;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        padding: 0 20px;
+    }
+
+    .nav-link {
+        padding: 10px 24px;
+        color: rgba(255, 255, 255, 0.85);
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        letter-spacing: 0.5px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .nav-link:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-link.active {
+        background: rgba(74, 144, 226, 0.3);
+        color: #ffffff;
+        border-color: rgba(74, 144, 226, 0.5);
+        box-shadow: 0 0 20px rgba(74, 144, 226, 0.2);
+    }
+
+    .nav-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.1),
+            transparent
+        );
+        transition: 0.5s;
+    }
+
+    .nav-link:hover::before {
+        left: 100%;
+    }
+
+    /* 為了防止內容被固定導航欄遮擋 */
+    body {
+        padding-top: 70px;
+    }
+
+    /* 確保平滑滾動 */
+    html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 70px;
+    }
+
+    /* 響應式設計 */
+    @media (max-width: 768px) {
+        .nav-container {
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-link {
+            font-size: 14px;
+            padding: 8px 16px;
+        }
+    }
+</style>
+
+<nav class="fixed-nav">
+    <div class="nav-container">
+        <a href="#day1" class="nav-link">第一天 - 大阪初體驗</a>
+        <a href="#day2" class="nav-link">第二天 - 神社道頓堀</a>
+        <a href="#day3" class="nav-link">第三天 - 寺廟參訪</a>
+        <a href="#day4" class="nav-link">第四天 - 京都之旅</a>
+        <a href="#day5" class="nav-link">第五天 - 回程</a>
+    </div>
+</nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('section');
+
+        function updateActiveLink() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.pageYOffset >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        window.addEventListener('scroll', updateActiveLink);
+        updateActiveLink();
+    });
+</script>
+
 </head>
 <body>
+    
     <div class="hero-container">
         <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80" 
              alt="大阪城市景觀" 
@@ -300,8 +446,6 @@
             <p class="hero-subtitle">2024年2月21日 - 2月25日</p>
         </div>
     </div>
-    
-    <div class="container">
         
                 <!-- Day 1 -->
                 <div class="day-card" data-aos="fade-up" id="day1">
@@ -1060,12 +1204,12 @@
                       <h3>
                           <i class="fas fa-shopping-bag"></i>
                           花見小路
-                         
+                          <div class="transport-info">
+                            <i class="fas fa-walking"></i>
+                            步行15分鐘
                       </h3>
-                      <div class="transport-info">
-                        <i class="fas fa-walking"></i> <p><a href="https://maps.app.goo.gl/nPxtSJQEZDBVShVZ7" target="_blank">花見小路地址</a></p>
-                        步行15分鐘
-                     
+                      
+                      <p><a href="https://maps.app.goo.gl/nPxtSJQEZDBVShVZ7" target="_blank">花見小路地址</a></p>
                       <div class="info-box">
                           <h4>重點事項：</h4>
                           <ul>
@@ -1084,18 +1228,19 @@
                   <div class="event">
                       <h3>
                           <i class="fas fa-utensils"></i>
-                          晚餐：環球城市走廊
+                          鴨川
                       </h3>
                       <div class="transport-info">
                           <i class="fas fa-walking"></i>
-                          步行10分鐘
+                          步行15分鐘
                       </div>
+                      <p><a href="https://maps.app.goo.gl/T5vokwE6y7k2Hf4BA" target="_blank">鴨川地址</a></p>
                       <div class="info-box">
-                          <h4>推薦餐廳：</h4>
+                          <h4>特色活動：</h4>
                           <ul>
-                              <li>Hard Rock Cafe</li>
-                              <li>大起水產</li>
-                              <li>Red Lobster</li>
+                              <li>跳烏龜：河合橋至賀茂大橋之間設有特色跳石</li>
+                              <li>納涼床：夏季限定的河畔露台用餐體驗</li>
+                              <li>散步野餐：當地人最愛的休閒活動</li>
                           </ul>
                       </div>
                   </div>
@@ -1103,92 +1248,118 @@
 
               <div class="timeline-item">
                   <div class="time">
-                      <i class="far fa-clock"></i> 19:30 - 20:30
+                      <i class="far fa-clock"></i> 16:00 - 18:00
                   </div>
                   <div class="event">
                       <h3>
                           <i class="fas fa-train"></i>
-                          返回飯店
+                          錦市場
                       </h3>
-                      <div class="transport-info">
-                          <i class="fas fa-subway"></i>
-                          JR線返回市區
-                      </div>
+                      <p><a href="https://maps.app.goo.gl/q6g559jbCMCxeRxq9" target="_blank">錦市場地址</a></p>
+                      <div class="info-box">
+                        <h4> 基本資訊：</h4>
+                        <ul>
+                            <li>下午5點左右陸續打烊</li>
+                          <li>玉子燒（三木雞卵）</li>
+                          <li>茶葉</li>
+                          <li>抹茶相關甜點</li>
+                        </ul>
+                    </div>
+                     
                   </div>
               </div>
-          </div>
-      </div>
+              <div class="timeline-item">
+                <div class="time">
+                    <i class="far fa-clock"></i> 19:00 - 20:30
+                </div>
+                <div class="event">
+                    <h3>
+                        <i class="fas fa-utensils"></i>
+                        Harves超市+晚餐(分開行動)
+                    </h3>
+                    <div class="transport-info">
+                        <i class="fas fa-walking"></i>
+                        地鐵60分鐘
+                    </div>
+                    <p><a href="https://maps.app.goo.gl/C5PtkRnEtDLG85T57" target="_blank">Harves超市地址</a></p>
+                    <div class="info-box">
+                        <h4>基本資訊：</h4>
+                        <ul>
+                            <li>自行採買食材回民宿烹煮</li>
+                               <li>外帶-玄品河豚(梅田東通店)                        </li>
+                               <li>營業到22:00</li>
+                               
+                             </ul>
+                             <div class="timeline-item">
+                                <div class="time">
+                                    <i class="far fa-clock"></i> 20:30
+                                </div>
+                                <div class="event">
+                                    <h3>
+                                        <i class="fas fa-train"></i>
+                                        回民宿
+                                    </h3>
+                                    <p><a href="https://maps.app.goo.gl/LbFPbaWZQqZMuuLF7" target="_blank">民宿地址</a></p>
+                    </div>
+                </div>
+                
+      
+            
+           
               <!-- Day 5 -->
               <div class="day-card" data-aos="fade-up" id="day5">
                 <div class="day-header">
                     <i class="fas fa-shopping-cart"></i>
-                    <h2>Day 5 - 大阪購物・回家（2/25 二）</h2>
+                    <h2>Day 5 - 倉敷・回程（2/25 二）</h2>
                 </div>
                 
                 <div class="timeline">
                     <div class="timeline-item">
                         <div class="time">
-                            <i class="far fa-clock"></i> 08:00 - 09:00
+                            <i class="far fa-clock"></i> 06:00 - 06:15
                         </div>
                         <div class="event">
                             <h3>
                                 <i class="fas fa-coffee"></i>
-                                飯店早餐・退房
+                                計程車
                             </h3>
-                            <div class="info-box">
-                                <h4>退房注意事項：</h4>
-                                <ul>
-                                    <li>行李寄存服務</li>
-                                    <li>房間最終確認</li>
-                                    <li>結清房費</li>
-                                </ul>
+                            <span class="price-tag">車程10分鐘(預計每人500日圓)</span>
+                            
                             </div>
                         </div>
                     </div>
     
                     <div class="timeline-item">
                         <div class="time">
-                            <i class="far fa-clock"></i> 09:30 - 12:00
+                            <i class="far fa-clock"></i> 06:15 - 08:30
                         </div>
                         <div class="event">
                             <h3>
                                 <i class="fas fa-shopping-bag"></i>
-                                心齋橋・道頓堀購物
+                                新幹線前往岡山車站/倉敷車站
                             </h3>
                             <div class="transport-info">
                                 <i class="fas fa-subway"></i>
-                                地鐵御堂筋線
+                                岡山車站 → 倉敷車站 約40分鐘
                             </div>
-                            <div class="info-box">
-                                <h4>推薦購物點：</h4>
-                                <ul>
-                                    <li>大丸百貨</li>
-                                    <li>BicCamera</li>
-                                    <li>Apple Store</li>
-                                    <li>UNIQLO</li>
-                                    <li>松本清藥妝</li>
-                                </ul>
-                            </div>
+                            
                         </div>
                     </div>
     
                     <div class="timeline-item">
                         <div class="time">
-                            <i class="far fa-clock"></i> 12:00 - 13:30
+                            <i class="far fa-clock"></i> 08:30 - 09:00
                         </div>
                         <div class="event">
                             <h3>
-                                <i class="fas fa-utensils"></i>
-                                午餐：最後的關西美食
+                                <i class="fas fa-suitcase"></i>
+                                行李寄存
+                                
                             </h3>
-                            <div class="info-box">
-                                <h4>推薦美食：</h4>
-                                <ul>
-                                    <li>蟹道樂</li>
-                                    <li>金龍拉麵</li>
-                                    <li>串カツだるま</li>
-                                </ul>
+                            <div class="transport-info">
+                                費用：<span class="price-tag">¥700/件</span>
                             </div>
+                            
                         </div>
                     </div>
     
@@ -1199,19 +1370,18 @@
                         <div class="event">
                             <h3>
                                 <i class="fas fa-store"></i>
-                                黑門市場採買
+                                倉敷美觀地區-午餐+逛街
+
                             </h3>
-                            <div class="transport-info">
-                                <i class="fas fa-subway"></i>
-                                地鐵堺筋線
-                            </div>
+                            
                             <div class="info-box">
-                                <h4>推薦伴手禮：</h4>
+                                <h4>特色與亮點：</h4>
                                 <ul>
-                                    <li>大阪燒仙貝</li>
-                                    <li>萬波糖</li>
-                                    <li>章魚燒餅乾</li>
-                                    <li>抹茶點心</li>
+                                    <li>大原美術館:日本首座私立美術館</li>
+                                    <li>倉敷川遊船:票價成人500日圓</li>
+                                    <li>三井OUTLET PARK 倉敷</li>
+                                    <li>Ario倉敷（倉敷站北口）綜合商場</li>
+                                    <li>えびす商店街（惠比壽商店街）</li>
                                 </ul>
                             </div>
                         </div>
@@ -1219,90 +1389,75 @@
     
                     <div class="timeline-item">
                         <div class="time">
-                            <i class="far fa-clock"></i> 15:00 - 16:00
+                            <i class="far fa-clock"></i> 11:40 - 12:15
                         </div>
                         <div class="event">
                             <h3>
                                 <i class="fas fa-suitcase"></i>
-                                返回飯店取行李
+                                取行李並搭機場巴士（¥1150/人）
+
                             </h3>
-                            <div class="info-box">
-                                <p>整理行李，確認貴重物品</p>
+                        
                             </div>
                         </div>
                     </div>
     
                     <div class="timeline-item">
                         <div class="time">
-                            <i class="far fa-clock"></i> 16:00 - 17:00
+                            <i class="far fa-clock"></i> 12:50 
                         </div>
                         <div class="event">
                             <h3>
                                 <i class="fas fa-train"></i>
-                                前往關西機場
+                                抵達岡山機場
                             </h3>
                             <div class="transport-info">
                                 <i class="fas fa-subway"></i>
-                                JR特急はるか号
-                                <span class="price-tag">¥1,880（含JR Pass）</span>
+                                車程約40分鐘
+                               
                             </div>
-                            <div class="info-box">
-                                <h4>注意事項：</h4>
-                                <ul>
-                                    <li>預留足夠通關時間</li>
-                                    <li>確認登機證</li>
-                                    <li>準備退稅單據</li>
-                                </ul>
-                            </div>
+                            
                         </div>
                     </div>
     
                     <div class="timeline-item">
                         <div class="time">
-                            <i class="far fa-clock"></i> 17:00 - 18:30
-                        </div>
+                            <i class="far fa-clock"></i> 12:50 - 15:25                        </div>
                         <div class="event">
                             <h3>
                                 <i class="fas fa-passport"></i>
-                                機場手續・退稅
+                                出境＆免稅店購物
                             </h3>
-                            <div class="info-box">
-                                <h4>辦理事項：</h4>
-                                <ul>
-                                    <li>退稅手續</li>
-                                    <li>行李托運</li>
-                                    <li>過海關</li>
-                                    <li>安檢</li>
-                                </ul>
+                           
                             </div>
                         </div>
                     </div>
     
                     <div class="timeline-item">
                         <div class="time">
-                            <i class="far fa-clock"></i> 19:25 - 21:55
+                            <i class="far fa-clock"></i> 15:25 - 17:30
                         </div>
                         <div class="event">
                             <h3>
                                 <i class="fas fa-plane"></i>
-                                搭乘虎航 IT211
+                                搭乘虎航 IT215
                             </h3>
-                            <p>關西國際機場 → 桃園機場</p>
+                            <p>岡山機場 → 桃園機場</p>
                             <div class="transport-info">
                                 <i class="fas fa-clock"></i>
-                                飛行時間約3小時30分鐘
+                                飛行時間約2小時5分鐘
                             </div>
                         </div>
                     </div>
     
                     <div class="timeline-item">
                         <div class="time">
-                            <i class="far fa-clock"></i> 21:55
+                            <i class="far fa-clock"></i> 17:30
                         </div>
                         <div class="event">
                             <h3>
                                 <i class="fas fa-home"></i>
-                                抵達桃園機場
+                                台灣入境
                             </h3>
                             <div class="info-box">
                                 <p>行程圓滿結束</p>
@@ -1310,7 +1465,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> </div>
     
             <!-- Footer -->
             <div class="footer">
@@ -1786,17 +1941,17 @@
                     <div class="intro-section">
                         <h1>大阪京都5天精彩行程</h1>
                         <p>2024年2月21日 - 2月25日</p>
-                        <p>精心規劃的關西地區深度遊，包含大阪城、京都寺社、環球影城等精彩景點</p>
+                        <p>精心規劃的關西地區深度遊，包含大阪城、京都寺社、道頓堀等精彩景點</p>
                     </div>
         
                     <!-- 快速導航 -->
                     <nav class="quick-nav">
                         <ul>
-                            <li><a href="#day1">Day 1 - 抵達關西</a></li>
-                            <li><a href="#day2">Day 2 - 大阪城・道頓堀</a></li>
-                            <li><a href="#day3">Day 3 - 京都一日遊</a></li>
-                            <li><a href="#day4">Day 4 - 環球影城</a></li>
-                            <li><a href="#day5">Day 5 - 購物・回程</a></li>
+                            <li><a href="#day1">Day 1 - 出發日・大阪初體驗</a></li>
+                            <li><a href="#day2">Day 2 - 神社・道頓堀</a></li>
+                            <li><a href="#day3">Day 3 - 大阪寺廟參訪</a></li>
+                            <li><a href="#day4">Day 4 - 京都之旅</a></li>
+                            <li><a href="#day5">Day 5 - 倉敷・回程</a></li>
                         </ul>
                     </nav>
         
