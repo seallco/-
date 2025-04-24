@@ -1,9 +1,6 @@
-// 等待DOM完全加載
 document.addEventListener('DOMContentLoaded', function() {
-    // 回到頂部按鈕
     const backToTopButton = document.getElementById('back-to-top');
     
-    // 監聽滾動事件
     window.addEventListener('scroll', function() {
         if (window.pageYOffset > 300) {
             backToTopButton.classList.add('show');
@@ -12,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // 點擊回到頂部
     backToTopButton.addEventListener('click', function() {
         window.scrollTo({
             top: 0,
@@ -20,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // 平滑滾動到錨點
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
@@ -37,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // 建築卡片閱讀更多按鈕
     const readMoreButtons = document.querySelectorAll('.read-more');
     
     readMoreButtons.forEach(button => {
@@ -45,7 +39,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const card = this.parentElement;
             const buildingId = card.id;
             
-            // 根據不同建築顯示不同的詳細內容
             let detailContent = '';
             
             if (buildingId === 'building1') {
@@ -74,28 +67,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
             }
             
-            // 保存原始內容
             const originalContent = card.innerHTML;
             card.setAttribute('data-original-content', originalContent);
             
-            // 更新卡片內容
             card.innerHTML = detailContent;
             
-            // 添加收起按鈕事件
             card.querySelector('.read-less').addEventListener('click', function() {
                 card.innerHTML = card.getAttribute('data-original-content');
-                // 重新添加閱讀更多按鈕事件
                 card.querySelector('.read-more').addEventListener('click', function() {
                     const buildingId = card.id;
-                    // 這裡需要再次調用閱讀更多的功能
-                    // 為了簡化，這裡直接刷新頁面
                     window.location.reload();
                 });
             });
         });
     });
     
-    // 圖片集動畫效果
     const galleryItems = document.querySelectorAll('.gallery-item');
     
     galleryItems.forEach(item => {
@@ -108,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // 頁面加載動畫
     const sections = document.querySelectorAll('.section');
     
     function checkScroll() {
@@ -123,16 +108,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // 初始設置
     sections.forEach(section => {
         section.style.opacity = '0';
         section.style.transform = 'translateY(20px)';
         section.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
     });
     
-    // 檢查初始位置
     checkScroll();
     
-    // 監聽滾動事件
     window.addEventListener('scroll', checkScroll);
 });
