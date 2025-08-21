@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>文書電腦方案比較</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    /********************************************************
+      全白字 + 重點紅色 版本
+      說明：
+      1. 所有一般文字改為白色 (#ffffff)。
+      2. 重要/需吸引注意的元素統一使用紅色 (#ff4d4f)。
+      3. 背景全面改為深色系，確保白字對比。
+      4. 原本的藍/綠/黃等色標籤全部去色或轉為暗灰框，避免干擾「紅=重點」視覺。
+      5. 新增 .important / .mark-imp / .imp-block 等輔助 class，可自訂再套用。
+      6. 表格 hover、區塊陰影皆低干擾，焦點仍在紅色資訊。
+      7. 可再依需求把「哪些算重點」細調（目前：標題、價格、旗標、性能倍數 icon、決策步驟號、快速摘要內的 mark）。
+    *********************************************************/
+    :root {
+      --bg:#0d1117;
+      --bg-alt:#141a22;
+      --panel:#161d25;
+      --panel-alt:#1f2731;
+      --border:#2c3742;
+      --border-soft:#23303b;
+      --text:#ffffff;
+      --important:#ff4d4f;
+      --important-glow:0 0 0 3px rgba(255,77,79,0.15);
+      --radius:14px;
+      --shadow:0 6px 16px -6px rgba(0,0,0,.6), 0 2px 6px rgba(0,0,0,.45);
+      --transition:160ms ease;
+      --font-base: clamp(14px, 0.55vw + 0.55rem, 18px);
+      --font-small: .78rem;
+      --font-xsmall: .68rem;
+    }
+    *{box-sizing:border-box;}
+    html,body{margin:0;padding:0;}
+    body{
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      font-size:var(--font-base);
+      background:linear-gradient(135deg,#0b0f14,#10161d 45%,#141d26);
+      color:var(--text);
+      line-height:1.5;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /*********** 通用文字 ***********/
+    h1,h2,h3{
+      font-weight:600;
+      line-height:1.18;
+      margin:0 0 .85rem;
+      color:var(--important);
+    }
+    h1{
+      font-size:clamp(2rem,1.7rem + .8vw,2.7rem);
+      text-shadow:0 0 8px rgba(255,77,79,.25);
+    }
+    h2{
+      font-size:clamp(1.35rem,1.1rem + .7vw,1.75rem);
+      position:relative;
+      padding-left:.85rem;
+    }
+    h2:before{
+      content:"";
+      position:absolute;
+      left:0;top:.18rem;bottom:.18rem;
+      width:5px;
+      border-radius:3px;
+      background:var(--important);
+      box-shadow:0 0 6px rgba(255,77,79,.5);
+    }
+    h3{
+      font-size:clamp(1rem,.95rem + .4vw,1.25rem);
+    }
+    p.lead{
+      font-size:clamp(.95rem,.9rem + .35vw,1.15rem);
+      max-width:960px;
+      margin:0 0 1rem;
+      color:var(--text);
+    }
+    a{color:var(--important);text-decoration:none;}
+    a:hover{text-decoration:underline;}
+
+    header{
+      padding:2rem clamp(1rem,2.8vw,3.2rem) 1.1rem;
+      max-width:1700px;
+      margin:0 auto;
+    }
+    main{
+      padding:0 clamp(1rem,2.8vw,3.2rem) 3.8rem;
+      max-width:1700px;
+      margin:0 auto;
+    }
+
+    section{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:clamp(1.05rem,0.9rem + 0.6vw,1.7rem) clamp(1rem,0.8rem + 1.1vw,2rem) clamp(1.3rem,1rem + .9vw,1.9rem);
+      margin:0 0 2rem;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+      transition:background var(--transition),border-color var(--transition),transform var(--transition);
+    }
+    section:hover{
+      background:#1c252f;
+      border-color:#364452;
+    }
+
+    /*********** Pill / Badge (去色 → 白) ***********/
+    .pill-legend{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.55rem;
+      margin:.5rem 0 1.2rem;
+      font-size:.72rem;
+    }
+    .pill{
+      background:#242f3b;
+      color:#fff;
+      padding:.48rem .8rem;
+      border-radius:999px;
+      font-weight:600;
+      letter-spacing:.5px;
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+    }
+    .pill span{font-size:1.05rem;}
+    .badge{
+      background:#242f3b;
+      color:#fff;
+      padding:.42rem .75rem .4rem;
+      font-size:.7rem;
+      letter-spacing:.55px;
+      border-radius:999px;
+      font-weight:600;
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+    }
+    /* 將原本彩色分類統一低彩度，僅保留 danger=紅(重要) */
+    .badge.danger,
+    .badge.accent,
+    .badge.primary,
+    .badge.good,
+    .badge.warn{
+      background:#2e3a46;
+      color:#ffffff;
+    }
+    .badge.danger{background:var(--important);color:#fff;box-shadow:var(--important-glow);}
+    .flag{
+      display:inline-block;
+      background:var(--important);
+      color:#fff;
+      padding:.3rem .6rem .32rem;
+      border-radius:6px;
+      font-size:.63rem;
+      font-weight:700;
+      letter-spacing:.6px;
+      box-shadow:var(--important-glow);
+    }
+
+    /*********** 表格 ***********/
+    .table-scroll{
+      overflow-x:auto;
+      border:1px solid var(--border);
+      border-radius:10px;
+      background:#141b22;
+      position:relative;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:clamp(.8rem,.75rem + 0.25vw,.95rem);
+      line-height:1.35;
+      color:var(--text);
+    }
+    th,td{
+      padding:.7rem .85rem;
+      text-align:left;
+      vertical-align:top;
+      border-bottom:1px solid #25313c;
+    }
+    th{
+      background:#1d2530;
+      font-size:.7rem;
+      text-transform:uppercase;
+      letter-spacing:.8px;
+      font-weight:700;
+      position:sticky;
+      top:0;
+      z-index:2;
+      color:var(--important);
+    }
+    tbody tr:last-child td{border-bottom:none;}
+    tbody tr:hover{
+      background:#22303c;
+    }
+    tbody tr.highlight{
+      background:linear-gradient(90deg,#2a3946,#1c262f);
+    }
+    .price{
+      font-weight:700;
+      color:var(--important);
+      font-variant-numeric:tabular-nums;
+    }
+
+    /*********** 響應式欄位隱藏 (保留結構) ***********/
+    @media (max-width:1299px){
+      #table-main table thead tr th:last-child,
+      #table-main table tbody tr td:last-child{display:none;}
+      #shortlist table thead tr th:last-child,
+      #shortlist table tbody tr td:last-child{display:none;}
+    }
+    @media (max-width:1099px){
+      #table-main table thead tr th:nth-last-child(2),
+      #table-main table tbody tr td:nth-last-child(2){display:none;}
+    }
+    @media (max-width:900px){
+      table thead{display:none;}
+      table,tbody,tr,td{display:block;width:100%;}
+      tr{
+        margin:0 0 1rem;
+        border:1px solid var(--border);
+        border-radius:12px;
+        background:#161d25;
+        box-shadow:0 2px 6px rgba(0,0,0,.45);
+        padding:.5rem .6rem .65rem;
+      }
+      td{
+        border:none;
+        padding:.42rem .4rem .42rem 5.8rem !important;
+        position:relative;
+        font-size:.86rem;
+      }
+      td:before{
+        content: attr(data-label);
+        position:absolute;
+        left:.75rem;
+        top:.45rem;
+        font-size:.63rem;
+        font-weight:700;
+        letter-spacing:.6px;
+        color:var(--important);
+        text-transform:uppercase;
+      }
+    }
+
+    /*********** 性能圖示 ***********/
+    .perf{
+      font-weight:700;
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+      font-size:.83rem;
+      color:var(--important);
+    }
+    .perf span.icon{font-size:1.05rem;}
+
+    /*********** 流程步驟 ***********/
+    .flow-steps{
+      display:flex;
+      flex-direction:column;
+      gap:.9rem;
+      margin:1.15rem 0;
+      counter-reset:step;
+    }
+    .flow-steps .step{
+      background:#1d2731;
+      border:1px solid var(--border);
+      border-left:5px solid var(--important);
+      padding:.85rem 1rem .95rem;
+      border-radius:12px;
+      position:relative;
+      counter-increment:step;
+      font-size:.85rem;
+    }
+    .flow-steps .step:before{
+      content:counter(step);
+      position:absolute;
+      left:-16px;
+      top:50%;
+      transform:translateY(-50%);
+      background:var(--important);
+      color:#fff;
+      font-size:.72rem;
+      width:26px;
+      height:26px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:50%;
+      font-weight:700;
+      box-shadow:var(--important-glow);
+    }
+
+    /*********** 重點框 ***********/
+    .focus-box{
+      border:1px solid var(--border);
+      border-left:6px solid var(--important);
+      background:linear-gradient(135deg,#182028,#1f2a33);
+      padding:1rem 1.05rem 1.15rem;
+      border-radius:16px;
+      margin:1.15rem 0;
+      position:relative;
+    }
+    .focus-box h3{margin:.1rem 0 .65rem;color:var(--important);}
+
+    .inline-hint{
+      display:inline-block;
+      background:#242f3b;
+      padding:.42rem .65rem;
+      border-radius:8px;
+      font-size:.7rem;
+      font-weight:600;
+    }
+    .inline-badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.55rem;
+      margin-top:.55rem;
+    }
+    .inline-badges .badge{
+      background:#2b3844;
+      color:#fff;
+      font-weight:600;
+    }
+    .inline-badges .badge.good,
+    .inline-badges .badge.accent{
+      background:#2b3844;
+    }
+    .inline-badges .badge.good.important,
+    .inline-badges .badge.accent.important{
+      background:var(--important);
+      box-shadow:var(--important-glow);
+    }
+
+    /*********** 卡片推薦 ***********/
+    .recommend-box{
+      display:grid;
+      gap:1rem;
+      margin-top:.6rem;
+    }
+    @media (min-width:820px){
+      .recommend-box{
+        grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+      }
+    }
+    .rec-card{
+      border:1px solid var(--border);
+      background:#1c242d;
+      padding:.95rem 1rem 1.05rem;
+      border-radius:16px;
+      display:flex;
+      flex-direction:column;
+      gap:.5rem;
+      min-height:150px;
+      position:relative;
+      transition:transform var(--transition),border-color var(--transition),background var(--transition);
+    }
+    .rec-card:hover{
+      transform:translateY(-3px);
+      border-color:#3b4a59;
+      background:#23303b;
+    }
+    .rec-card.highlight{
+      border-color:var(--important);
+      box-shadow:0 0 0 1px var(--important),0 0 18px -4px rgba(255,77,79,.55);
+    }
+    .rec-card .title{
+      font-size:.9rem;
+      font-weight:700;
+      letter-spacing:.5px;
+      color:var(--important);
+    }
+    .rec-card .desc{
+      font-size:.76rem;
+      line-height:1.4;
+      color:var(--text);
+      flex-grow:1;
+    }
+
+    /*********** 比例條 ***********/
+    .ratio-bar{
+      --pct:50%;
+      height:10px;
+      background:#23303b;
+      border-radius:6px;
+      overflow:hidden;
+      margin:.5rem 0 .7rem;
+      position:relative;
+    }
+    .ratio-bar span{
+      position:absolute;
+      inset:0;
+      width:var(--pct);
+      background:var(--important);
+      box-shadow:0 0 6px rgba(255,77,79,.7);
+    }
+
+    /*********** 摘要 / 說明 ***********/
+    .tagline{
+      display:inline-block;
+      background:#1d2731;
+      padding:.55rem .95rem .6rem;
+      border-radius:10px;
+      font-size:.85rem;
+      font-weight:600;
+      letter-spacing:.4px;
+      box-shadow:inset 0 0 0 1px #2e3a46;
+    }
+    .disclaimer{
+      font-size:var(--font-xsmall);
+      line-height:1.45;
+      margin-top:.9rem;
+      color:#d0d7de;
+    }
+    mark{
+      background:var(--important);
+      color:#fff;
+      padding:.15rem .35rem;
+      border-radius:4px;
+      box-shadow:var(--important-glow);
+    }
+
+    /*********** 自訂重點標記 ***********/
+    .important{color:var(--important) !important;font-weight:700;}
+    .imp-block{
+      border:1px solid var(--important);
+      padding:.75rem 1rem;
+      border-radius:10px;
+      background:#1d262f;
+      box-shadow:var(--important-glow);
+    }
+
+    /*********** 捲軸 ***********/
+    .table-scroll::-webkit-scrollbar{height:10px;}
+    .table-scroll::-webkit-scrollbar-track{background:#1a232b;border-radius:5px;}
+    .table-scroll::-webkit-scrollbar-thumb{background:#394652;border-radius:5px;}
+    .table-scroll::-webkit-scrollbar-thumb:hover{background:#4a5967;}
+
+    footer{
+      text-align:center;
+      padding:2.6rem 1rem 3rem;
+      font-size:.72rem;
+      color:#a8b3bc;
+    }
+
+    /*********** 超寬螢幕微調 ***********/
+    @media (min-width:1900px){
+      body{font-size:clamp(15px,0.5vw + 0.55rem,19px);}
+      th,td{padding:.78rem 1rem;}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>文書電腦方案比較</h1>
+    <p class="lead">
+      以下彙整五個實際方案 (其中「電腦一」拆成 A / B 兩個獨立選項)。性能相對值以舊參考 CPU G5905 為 1x（概略用來快速挑選）。
+    </p>
+    <div class="pill-legend">
+      <div class="pill"><span>🐢</span>1x</div>
+      <div class="pill"><span>🚶</span>~1.4x</div>
+      <div class="pill"><span>🚗</span>~3x</div>
+      <div class="pill"><span>🚄</span>~5x</div>
+      <div class="pill"><span>✈</span>~8x</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- 總表 -->
+    <section id="table-main">
+      <h2>五個方案總表</h2>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>編號</th>
+              <th>方案名稱</th>
+              <th>店家 / 距離</th>
+              <th>新舊</th>
+              <th>CPU (倍數)</th>
+              <th>主機板</th>
+              <th>記憶體</th>
+              <th>顯示/顯卡</th>
+              <th>螢幕</th>
+              <th>系統</th>
+              <th>價格</th>
+              <th>一句話</th>
+              <th>定位</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="編號">1A</td>
+              <td data-label="方案">電腦一A (G6900)</td>
+              <td data-label="店家">元健 / 5 分</td>
+              <td data-label="新舊">新</td>
+              <td data-label="CPU"><div class="perf"><span class="icon">🚶</span>1.4x</div></td>
+              <td data-label="主機板">一般</td>
+              <td data-label="記憶體">16GB</td>
+              <td data-label="顯示">內顯</td>
+              <td data-label="螢幕">27" 新 3000</td>
+              <td data-label="系統">正版 +2000</td>
+              <td data-label="價格" class="price">~16000</td>
+              <td data-label="一句話">基礎升級</td>
+              <td data-label="定位">脫離卡頓</td>
+            </tr>
+            <tr class="highlight">
+              <td data-label="編號">1B <span class="flag">平衡</span></td>
+              <td data-label="方案">電腦一B (R5)</td>
+              <td data-label="店家">元健 / 5 分</td>
+              <td data-label="新舊">新</td>
+              <td data-label="CPU"><div class="perf"><span class="icon">🚗</span>3x</div></td>
+              <td data-label="主機板">一般</td>
+              <td data-label="記憶體">16GB</td>
+              <td data-label="顯示">內顯</td>
+              <td data-label="螢幕">27" 新 3000</td>
+              <td data-label="系統">正版 +2000</td>
+              <td data-label="價格" class="price">~17000</td>
+              <td data-label="一句話">明顯快</td>
+              <td data-label="定位">想用久</td>
+            </tr>
+            <tr>
+              <td data-label="編號">2</td>
+              <td data-label="方案">電腦二 (i3-14100)</td>
+              <td data-label="店家">昱崴 / 5 分</td>
+              <td data-label="新舊">新</td>
+              <td data-label="CPU"><div class="perf"><span class="icon">🚄</span>5x</div></td>
+              <td data-label="主機板">一般</td>
+              <td data-label="記憶體">16GB</td>
+              <td data-label="顯示">內顯</td>
+              <td data-label="螢幕">27" 新 2800</td>
+              <td data-label="系統">正版 +4000</td>
+              <td data-label="價格" class="price">17300</td>
+              <td data-label="一句話">多開順暢</td>
+              <td data-label="定位">高流暢</td>
+            </tr>
+            <tr>
+              <td data-label="編號">3 <span class="flag">性價比</span></td>
+              <td data-label="方案">電腦三 (5600X 二手)</td>
+              <td data-label="店家">昱翔 / 15 分</td>
+              <td data-label="新舊">二手</td>
+              <td data-label="CPU"><div class="perf"><span class="icon">✈</span>8x</div></td>
+              <td data-label="主機板">X570</td>
+              <td data-label="記憶體">32GB</td>
+              <td data-label="顯示">GTX 1660S</td>
+              <td data-label="螢幕">三星27" 曲面二手 240Hz</td>
+              <td data-label="系統">w11</td>
+              <td data-label="價格" class="price">13500</td>
+              <td data-label="一句話">性能過剩</td>
+              <td data-label="定位">高性能</td>
+            </tr>
+            <tr>
+              <td data-label="編號">4 <span class="flag">較新</span></td>
+              <td data-label="方案">電腦四 (5500GT)</td>
+              <td data-label="店家">昱翔 / 15 分</td>
+              <td data-label="新舊">主機新 / 螢幕二手</td>
+              <td data-label="CPU"><div class="perf"><span class="icon">🚄</span>5x</div></td>
+              <td data-label="主機板">A520</td>
+              <td data-label="記憶體">16GB</td>
+              <td data-label="顯示">內顯</td>
+              <td data-label="螢幕">三星27" 曲面二手 240Hz</td>
+              <td data-label="系統">w11</td>
+              <td data-label="價格" class="price">13000</td>
+              <td data-label="一句話">便宜好用</td>
+              <td data-label="定位">相對低價</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="disclaimer">性能倍數為概略級距；實際分數視應用與散熱而異。</div>
+    </section>
+
+    <!-- 精簡對照 -->
+    <section id="shortlist">
+      <h2>四方案精簡對照</h2>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>面向</th>
+              <th>1B</th>
+              <th>2</th>
+              <th>3</th>
+              <th>4</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="面向">性能</td>
+              <td data-label="1B"><div class="perf">🚗 3x</div></td>
+              <td data-label="2"><div class="perf">🚄 5x</div></td>
+              <td data-label="3"><div class="perf">✈ 8x</div></td>
+              <td data-label="4"><div class="perf">🚄 5x</div></td>
+            </tr>
+            <tr>
+              <td data-label="面向">價格</td>
+              <td data-label="1B" class="price">17000</td>
+              <td data-label="2" class="price">17300</td>
+              <td data-label="3" class="price">13500</td>
+              <td data-label="4" class="price">13000</td>
+            </tr>
+            <tr>
+              <td data-label="面向">記憶體</td>
+              <td data-label="1B">16GB</td>
+              <td data-label="2">16GB</td>
+              <td data-label="3">32GB</td>
+              <td data-label="4">16GB</td>
+            </tr>
+            <tr>
+              <td data-label="面向">主機板</td>
+              <td data-label="1B">一般</td>
+              <td data-label="2">一般</td>
+              <td data-label="3">X570</td>
+              <td data-label="4">A520</td>
+            </tr>
+           
+            <tr>
+              <td data-label="面向">定位</td>
+              <td data-label="1B">平衡</td>
+              <td data-label="2">高流暢</td>
+              <td data-label="3">性能價值</td>
+              <td data-label="4">低價高效</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 深入 -->
+    <section id="deep">
+      <h2>進一步分析</h2>
+      <div class="focus-box">
+        <h3>CPU 梯度</h3>
+        <div class="inline-hint">從低到高：G6900 → R5 → i3-14100 / 5500GT → 5600X</div>
+        <div class="ratio-bar" style="--pct:18%"><span></span></div>
+        <div class="ratio-bar" style="--pct:40%"><span></span></div>
+        <div class="ratio-bar" style="--pct:65%"><span></span></div>
+        <div class="ratio-bar" style="--pct:100%"><span></span></div>
+        <div class="disclaimer">比例條僅示意性能級距。</div>
+      </div>
+      <div class="focus-box">
+        <h3>記憶體</h3>
+        <p style="margin:.2rem 0 .5rem;">16GB 足夠文書多開；32GB 對單純文書為寬裕。</p>
+        <div class="inline-badges">
+          <span class="badge">16GB 建議</span>
+          <span class="badge">32GB 寬裕</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 決策 -->
+    <section id="decision">
+      <h2>決策考量</h2>
+      <div class="recommend-box">
+        <div class="rec-card">
+          <div class="title">電腦一B</div>
+          <div class="desc">平衡、含正版系統。</div>
+          <div class="perf">🚗 3x</div>
+        </div>
+        <div class="rec-card">
+          <div class="title">電腦四</div>
+          <div class="desc">低價達 5x 流暢。</div>
+          <div class="perf">🚄 5x</div>
+        </div>
+        <div class="rec-card">
+          <div class="title">電腦三</div>
+          <div class="desc">高性能但二手需查授權。</div>
+          <div class="perf">✈ 8x</div>
+        </div>
+        <div class="rec-card">
+          <div class="title">電腦二</div>
+          <div class="desc">全新 5x，價格較高。</div>
+          <div class="perf">🚄 5x</div>
+        </div>
+        <div class="rec-card">
+          <div class="title">電腦一A</div>
+          <div class="desc">僅基本升級。</div>
+          <div class="perf">🚶 1.4x</div>
+        </div>
+      </div>
+
+      <div class="flow-steps">
+        <div class="step"><strong class="important">步驟 1：</strong> 接受二手？可 → 3；否 → 下一步</div>
+        <div class="step"><strong class="important">步驟 2：</strong> 預算 ≤13K？是 → 4；否 → 下一步</div>
+        <div class="step"><strong class="important">步驟 3：</strong> 要更高速/寬裕？是 → 2 (或 4 節省)；否 → 下一步</div>
+        <div class="step"><strong class="important">步驟 4：</strong> 平衡安心 → 1B</div>
+      </div>
+
+      <div class="focus-box">
+        <h3>快速摘要</h3>
+        <ul style="margin:.3rem 0 0; padding-left:1.2rem; font-size:.85rem; line-height:1.5;">
+          <li><mark>不推薦 1A</mark> 若差價小直接 4 或 1B。</li>
+          <li><span class="important">性價比性能：</span>3 (需查授權/接受二手)。</li>
+          <li><span class="important">最穩定平衡：</span>1B。</li>
+          <li><span class="important">低價高效：</span>4。</li>
+          <li><span class="important">全新高流暢：</span>2 （衡量溢價）。</li>
+        </ul>
+      </div>
+
+      <div class="disclaimer">
+        性能倍數為概略級距；實際體感取決於軟體、背景程序、散熱與設定。未標授權務必向店家確認。
+      </div>
+    </section>
+
+    <!-- CPU 列表 -->
+    <section id="raw-cpu">
+      <h2>CPU 級距</h2>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>CPU</th>
+              <th>倍數</th>
+              <th>圖示</th>
+              <th>描述</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>G5905</td><td>1x</td><td>🐢</td><td>舊基準</td></tr>
+            <tr><td>G6900</td><td>1.4x</td><td>🚶</td><td>基本升級</td></tr>
+            <tr><td>R5 (一般)</td><td>3x</td><td>🚗</td><td>明顯順暢</td></tr>
+            <tr><td>i3-14100</td><td>5x</td><td>🚄</td><td>多分頁流暢</td></tr>
+            <tr><td>R5 5500/5500GT</td><td>5x</td><td>🚄</td><td>同級平衡</td></tr>
+            <tr><td>R5 5600X</td><td>8x</td><td>✈</td><td>性能寬裕</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 記憶體 -->
+    <section id="memory">
+      <h2>記憶體意義</h2>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>容量</th><th>體感</th><th>備註</th></tr></thead>
+          <tbody>
+            <tr><td>8GB</td><td>多分頁稍慢</td><td>僅勉強</td></tr>
+            <tr><td>16GB</td><td>多開穩定</td><td class="important">推薦</td></tr>
+            <tr><td>32GB</td><td>寬裕</td><td>文書過量</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    用於快速聚焦關鍵資訊。請於購買前再次確認實際配件與授權。
+  </footer>
+</body>
+</html>
