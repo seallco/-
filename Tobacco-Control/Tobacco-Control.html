@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>菸害防制新法知識站 - 可愛教學版</title>
+    <!-- 引入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 設定 Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': '#4FC3F7', // 友善的主要藍色
+                        'bg-light': '#F8FAFC', // 超淺背景
+                        'card-bg': '#FFFFFF', // 卡片白色
+                        'accent-pink': '#FF8A80', // 可愛粉紅 (錯誤/警示)
+                        'accent-green': '#A5D6A7', // 柔和綠色 (正確/成功)
+                        'text-dark': '#334155', // 深色文字
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'cute-md': '0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.05)',
+                        'cute-hover': '0 6px 8px rgba(0, 0, 0, 0.1), 0 12px 20px rgba(0, 0, 0, 0.1)',
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        /* 基礎樣式覆蓋 */
+        body {
+            background-color: #F8FAFC; /* bg-light */
+            color: #334155; /* text-dark */
+            font-family: 'Inter', sans-serif;
+            padding-bottom: 3rem; /* 底部空間 */
+        }
+ 
+        /* 主容器樣式 */
+        #content-container {
+            border: 1px solid #E2E8F0;
+            transition: all 0.3s ease;
+        }
+ 
+        /* 導航按鈕的可愛效果 */
+        .tab-button {
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            border-bottom: 4px solid transparent;
+        }
+        .tab-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        .tab-button-active {
+            border-bottom-color: #4FC3F7; /* primary-blue */
+            color: #4FC3F7;
+            font-weight: 700;
+            transform: translateY(0);
+        }
+ 
+        /* 內容切換動畫 */
+        .page-content {
+            display: none;
+            animation: slideIn 0.4s ease-out;
+        }
+        .page-content.active {
+            display: block;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+ 
+        /* 測驗選項卡片樣式 */
+        .quiz-option {
+            background-color: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
+        }
+        .quiz-option:not([disabled]):hover {
+            background-color: #F0F9FF; /* light blue hover */
+            border-color: #4FC3F7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+ 
+        /* 正確/錯誤反饋顏色 */
+        .correct-answer {
+            background-color: #A5D6A7 !important; /* accent-green */
+            color: #1B5E20 !important;
+            border-color: #66BB6A !important;
+            animation: pulse-green 0.5s;
+        }
+        .incorrect-answer {
+            background-color: #FF8A80 !important; /* accent-pink */
+            color: #D32F2F !important;
+            border-color: #EF5350 !important;
+            animation: shake 0.3s;
+        }
+       
+        /* 動畫效果 */
+        @keyframes pulse-green {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.01); box-shadow: 0 0 10px rgba(165, 214, 167, 0.8); }
+            100% { transform: scale(1); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+ 
+        /* 戒菸資源連結按鈕 */
+        .resource-link {
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        .resource-link:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-bg-light text-text-dark min-h-screen">
+    <div class="max-w-7xl mx-auto p-4 md:p-8">
+ 
+        <!-- 標題與導覽列 -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold text-primary-blue mb-2 tracking-wide">
+                ⭐ 菸害防制新法知識站 ⭐
+            </h1>
+            <p class="text-gray-500 text-lg">輕鬆學習，一起守護健康！</p>
+        </header>
+ 
+        <nav class="sticky top-0 z-20 bg-card-bg/95 backdrop-blur-sm shadow-cute-md rounded-xl mb-8 p-3 border border-gray-200">
+            <div class="flex justify-center space-x-2 md:space-x-6">
+                <!-- 知識挑戰按鈕 -->
+                <button id="tab-quiz" onclick="changeTab('quiz')" class="tab-button text-gray-600 px-4 md:px-6 py-3 text-sm md:text-base font-medium">
+                    ✏️ 知識小測驗
+                </button>
+                <!-- 核心資料按鈕 -->
+                <button id="tab-summary" onclick="changeTab('summary')" class="tab-button text-gray-600 px-4 md:px-6 py-3 text-sm md:text-base font-medium">
+                    💡 七大重點整理
+                </button>
+                <!-- 資源按鈕 -->
+                <button id="tab-resources" onclick="changeTab('resources')" class="tab-button text-gray-600 px-4 md:px-6 py-3 text-sm md:text-base font-medium">
+                    💖 戒菸支援站
+                </button>
+            </div>
+        </nav>
+ 
+        <!-- 內容區塊 -->
+        <div id="content-container" class="bg-card-bg p-6 md:p-10 rounded-2xl shadow-cute-md">
+ 
+            <!-- 1. 互動測驗區 -->
+            <section id="quiz-page" class="page-content active">
+                <h2 class="text-3xl font-bold text-text-dark mb-8 border-l-4 border-primary-blue pl-4">✏️ 知識小測驗：法規大挑戰</h2>
+                <p class="text-gray-600 mb-8">準備好了嗎？點選您認為正確的答案，讓我們看看您對新法的了解程度！</p>
+               
+                <div id="quiz-area" class="space-y-8">
+                    <!-- 測驗題目將由 JS 動態生成 -->
+                </div>
+ 
+                <div id="quiz-control" class="mt-12 pt-8 border-t border-gray-200 text-center">
+                    <button id="submit-quiz-btn" class="bg-primary-blue text-white text-xl font-bold px-8 py-3 rounded-full resource-link" disabled>
+                        🎁 提交答案並領取結果
+                    </button>
+                </div>
+ 
+                <!-- 測驗結果顯示區 -->
+                <div id="result-display" class="hidden mt-12 p-6 md:p-8 bg-gray-100 border-l-4 border-primary-blue rounded-lg">
+                    <h3 class="text-2xl font-bold text-primary-blue mb-3">🎉 您的學習成果</h3>
+                    <p id="result-text" class="text-lg text-text-dark"></p>
+                </div>
+            </section>
+ 
+            <!-- 2. 懶人包介紹區 (七大重點整理) -->
+            <section id="summary-page" class="page-content">
+                <h2 class="text-3xl font-bold text-text-dark mb-8 border-l-4 border-primary-blue pl-4">💡 七大重點整理：新法規必知！</h2>
+                <p class="text-gray-600 mb-10">新版《菸害防制法》的七個重要改變，用可愛卡片一次記住！</p>
+               
+                <!-- 七宮格卡片 (RWD Grid Layout) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                   
+                    <!-- 卡片 1: 禁止電子煙 -->
+                    <div class="p-5 rounded-xl bg-accent-pink/10 border-l-4 border-accent-pink shadow-cute-md resource-link">
+                        <div class="text-4xl mb-2">🚫</div>
+                        <h3 class="text-xl font-bold text-accent-pink mb-2">1. ❌ 全面禁止電子煙</h3>
+                        <p class="text-gray-600 text-sm">電子煙、霧化器等所有**類菸品**，全面禁止製造、輸入、販賣、供應、廣告及使用！</p>
+                    </div>
+ 
+                    <!-- 卡片 2: 嚴格管制加熱菸 -->
+                    <div class="p-5 rounded-xl bg-yellow-100 border-l-4 border-yellow-400 shadow-cute-md resource-link">
+                        <div class="text-4xl mb-2">🌡️📝</div>
+                        <h3 class="text-xl font-bold text-yellow-600 mb-2">2. ⚠️ 加熱菸：嚴格審查</h3>
+                        <p class="text-gray-600 text-sm">加熱菸需要通過政府的**健康風險評估審查核定通過**後，才能製造或進口。</p>
+                    </div>
+ 
+                    <!-- 卡片 3: 年齡提高 -->
+                    <div class="p-5 rounded-xl bg-blue-100 border-l-4 border-primary-blue shadow-cute-md resource-link">
+                        <div class="text-4xl mb-2">⬆️ 20</div>
+                        <h3 class="text-xl font-bold text-primary-blue mb-2">3. 📈 年齡門檻提高到 20 歲</h3>
+                        <p class="text-gray-600 text-sm">未滿 20 歲者不得吸菸、也不得向其販賣或供應菸品。請注意查核年齡喔！</p>
+                    </div>
+                   
+                    <!-- 卡片 4: 擴大禁菸場所 -->
+                    <div class="p-5 rounded-xl bg-accent-green/10 border-l-4 border-accent-green shadow-cute-md resource-link">
+                        <div class="text-4xl mb-2">🏫🌳</div>
+                        <h3 class="text-xl font-bold text-green-700 mb-2">4. 🔒 學校全面禁菸</h3>
+                        <p class="text-gray-600 text-sm">大專院校、幼兒園、托嬰中心等場所，所有室內外區域**全面禁菸**！</p>
+                    </div>
+ 
+                    <!-- 卡片 5: 警示圖文面積 -->
+                    <div class="p-5 rounded-xl bg-purple-100 border-l-4 border-purple-400 shadow-cute-md resource-link">
+                        <div class="text-4xl mb-2">🖼️ 50%</div>
+                        <h3 class="text-xl font-bold text-purple-600 mb-2">5. 📊 警示圖文面積 50%</h3>
+                        <p class="text-gray-600 text-sm">菸品容器上的健康警示圖文比例，從 35% 大幅增加到 **50%**。</p>
+                    </div>
+ 
+                    <!-- 卡片 6: 禁用添加物 -->
+                    <div class="p-5 rounded-xl bg-red-100 border-l-4 border-red-400 shadow-cute-md resource-link">
+                        <div class="text-4xl mb-2">⛔ 🍓</div>
+                        <h3 class="text-xl font-bold text-red-600 mb-2">6. 🚫 禁用特定調味劑</h3>
+                        <p class="text-gray-600 text-sm">未來將禁止使用經公告的特定添加物，避免用香味吸引人購買！</p>
+                    </div>
+                   
+                    <!-- 卡片 7: 罰則加重 -->
+                    <div class="p-5 rounded-xl bg-orange-100 border-l-4 border-orange-400 shadow-cute-md resource-link lg:col-span-1 md:col-start-2 lg:col-start-3">
+                        <div class="text-4xl mb-2">💰⚡</div>
+                        <h3 class="text-xl font-bold text-orange-600 mb-2">7. ⬆️ 違規罰則大大提高</h3>
+                        <p class="text-gray-600 text-sm">大幅提高違法製造、輸入、販賣或使用者之罰鍰金額，嚇阻效果更強！</p>
+                    </div>
+                </div>
+            </section>
+ 
+            <!-- 3. 危害與戒菸資源區 -->
+            <section id="resources-page" class="page-content">
+                <h2 class="text-3xl font-bold text-text-dark mb-8 border-l-4 border-primary-blue pl-4">💖 戒菸支援站：為健康加油！</h2>
+ 
+                <!-- 菸品危害區塊 -->
+                <div class="harm-section mb-10">
+                    <h3 class="text-2xl font-semibold text-text-dark mb-6 border-b border-gray-200 pb-2">🚨 菸品危害小百科</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="p-4 bg-accent-pink/10 rounded-lg shadow-sm border border-accent-pink resource-link">
+                            <div class="text-4xl mb-2">💨</div>
+                            <h4 class="text-xl font-bold text-accent-pink mb-1">一手菸 (主動)</h4>
+                            <p class="text-gray-600 text-sm">直接傷害自己的身體器官，是健康的最大殺手！</p>
+                        </div>
+                        <div class="p-4 bg-yellow-100 rounded-lg shadow-sm border border-yellow-400 resource-link">
+                            <div class="text-4xl mb-2">👨‍👩‍👧‍👦</div>
+                            <h4 class="text-xl font-bold text-yellow-600 mb-1">二手菸 (被動)</h4>
+                            <p class="text-gray-600 text-sm">對周圍的家人和朋友造成傷害，尤其是兒童。</p>
+                        </div>
+                        <div class="p-4 bg-purple-100 rounded-lg shadow-sm border border-purple-400 resource-link">
+                            <div class="text-4xl mb-2">🛋️</div>
+                            <h4 class="text-xl font-bold text-purple-600 mb-1">三手菸 (殘留)</h4>
+                            <p class="text-gray-600 text-sm">殘留在衣服、傢俱上的有害物質，危害嬰幼兒健康。</p>
+                        </div>
+                    </div>
+                </div>
+ 
+                <!-- 戒菸資源區塊 -->
+                <div class="quit-section">
+                    <h3 class="text-2xl font-semibold text-text-dark mb-6 border-b border-gray-200 pb-2">☎️ 專業戒菸幫手</h3>
+                    <div class="space-y-4">
+                        <div class="resource-item p-4 border border-primary-blue rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center bg-blue-50">
+                            <div>
+                                <h4 class="text-xl font-bold text-primary-blue mb-1">📞 戒菸專線服務</h4>
+                                <p class="text-gray-600">免費、隱密，有專業人士提供諮詢與心理支持。</p>
+                            </div>
+                            <a href="tel:0800636363" class="bg-primary-blue text-white font-bold px-4 py-2 rounded-full resource-link mt-2 sm:mt-0">
+                                撥打電話 (0800-636363)
+                            </a>
+                        </div>
+ 
+                        <div class="resource-item p-4 border border-accent-green rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center bg-accent-green/10">
+                            <div>
+                                <h4 class="text-xl font-bold text-green-700 mb-1">🏥 國民健康署：二代戒菸服務</h4>
+                                <p class="text-gray-600">尋找全國提供藥物或門診戒菸服務的醫療院所。</p>
+                            </div>
+                            <a href="https://www.hpa.gov.tw/Pages/List.aspx?nodeid=4611" target="_blank" class="bg-accent-green text-green-900 font-bold px-4 py-2 rounded-full resource-link mt-2 sm:mt-0">
+                                查詢戒菸門診
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+ 
+    <!-- JavaScript 邏輯區塊 -->
+    <script>
+        // Quiz Data (題庫)
+        const quizData = [
+            {
+                q: "1. 依據現行《菸害防制法》規定，任何人不得供應菸品予未滿幾歲者？",
+                options: ["未滿 18 歲", "未滿 20 歲", "未滿 22 歲", "未滿 16 歲"],
+                answer: 1, // B. 未滿 20 歲
+                feedback: "✅ **答對了！** 新法將禁止吸菸年齡提高至未滿 20 歲。",
+            },
+            {
+                q: "2. 針對「電子煙」等所有類菸品，新法規定的管制措施為何？",
+                options: ["必須通過健康風險評估審查才能販賣。", "只能在特定合法場所使用。", "全面禁止製造、輸入、販賣、供應、廣告及使用。", "僅禁止在校園內使用與販售。"],
+                answer: 2, // C. 全面禁止...
+                feedback: "✅ **答對了！** 臺灣對電子煙等所有類菸品採全面禁止態度。",
+            },
+            {
+                q: "3. 修正後的《菸害防制法》擴大禁菸場所，請問「大專院校」的禁菸範圍為何？",
+                options: ["僅限室內區域禁菸，室外設有吸菸區。", "校園所有室內外場所全面禁菸。", "僅限教學區禁菸，宿舍區可吸菸。", "僅禁止於教學大樓及行政大樓吸菸。"],
+                answer: 1, // B. 校園所有室內外場所全面禁菸。
+                feedback: "✅ **答對了！** 大專院校、幼兒園等都擴大為校園內所有室內外場所全面禁菸。",
+            },
+            {
+                q: "4. 針對「加熱菸」，在臺灣是否可直接販售？",
+                options: ["是，只要包裝上有警示圖文即可販售。", "否，必須經中央主管機關健康風險評估審查核定通過，始得製造或輸入。", "否，任何新型態菸品都如同電子煙，一律禁止。", "是，只要繳納高額健康捐即可販售。"],
+                answer: 1, // B. 否，必須經中央主管機關...
+                feedback: "✅ **答對了！** 加熱菸屬指定菸品，需通過審查才能上市，與全面禁止的電子煙不同。",
+            },
+            {
+                q: "5. 新法規定菸品容器上必須印製警示圖文的面積比例，已提高至多少？",
+                options: ["15%", "35%", "50%", "70%"],
+                answer: 2, // C. 50%
+                feedback: "✅ **答對了！** 警示圖文面積由 35% 提高至 **50%**。",
+            },
+        ];
+ 
+        let score = 0;
+        let answeredCount = 0;
+        const quizArea = document.getElementById('quiz-area');
+        const submitBtn = document.getElementById('submit-quiz-btn');
+        const resultDisplay = document.getElementById('result-display');
+        const resultText = document.getElementById('result-text');
+       
+        // --- 核心功能 1: 渲染測驗題目 ---
+        function renderQuiz() {
+            quizArea.innerHTML = '';
+            quizData.forEach((data, qIndex) => {
+                const qCard = document.createElement('div');
+                qCard.className = 'question-card p-6 border-l-4 border-primary-blue bg-white rounded-lg shadow-cute-md';
+                qCard.innerHTML = `<p class="question-text text-xl font-bold text-text-dark mb-4">${data.q}</p>`;
+ 
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options space-y-3';
+ 
+                data.options.forEach((option, oIndex) => {
+                    const optionBtn = document.createElement('button');
+                    optionBtn.textContent = `${String.fromCharCode(65 + oIndex)}. ${option}`;
+                    optionBtn.className = 'quiz-option w-full text-left px-5 py-3 rounded-xl transition duration-200 text-text-dark';
+                   
+                    // 使用 closure 確保傳遞正確的索引
+                    optionBtn.onclick = () => handleAnswer(qIndex, oIndex, optionBtn);
+                   
+                    optionsDiv.appendChild(optionBtn);
+                });
+ 
+                const feedbackDiv = document.createElement('div');
+                feedbackDiv.id = `feedback-${qIndex}`;
+                feedbackDiv.className = 'feedback mt-3 p-3 border-l-4 rounded-md text-sm hidden';
+               
+                qCard.appendChild(optionsDiv);
+                qCard.appendChild(feedbackDiv);
+                quizArea.appendChild(qCard);
+            });
+        }
+       
+        // --- 核心功能 2: 處理使用者作答 ---
+        function handleAnswer(qIndex, optionIndex, clickedButton) {
+            const data = quizData[qIndex];
+            const isCorrect = optionIndex === data.answer;
+            const options = clickedButton.closest('.options').querySelectorAll('button');
+            const feedbackDiv = document.getElementById(`feedback-${qIndex}`);
+ 
+            // 確保只計算一次分數
+            if (clickedButton.disabled) return;
+ 
+            // 禁用所有選項並標記
+            options.forEach((btn, index) => {
+                btn.disabled = true;
+                if (index === data.answer) {
+                    btn.classList.add('correct-answer');
+                }
+            });
+ 
+            // 處理分數和動畫
+            if (isCorrect) {
+                score++;
+                feedbackDiv.innerHTML = data.feedback;
+                feedbackDiv.classList.add('bg-accent-green/20', 'border-accent-green', 'text-green-800');
+            } else {
+                clickedButton.classList.add('incorrect-answer');
+ 
+                feedbackDiv.innerHTML = `❌ **答錯囉！** 正確答案是：${data.options[data.answer]}。 ${data.feedback.replace('✅ 答對了！', '請再複習一下！')}`;
+                feedbackDiv.classList.add('bg-accent-pink/20', 'border-accent-pink', 'text-red-700');
+            }
+ 
+            feedbackDiv.classList.remove('hidden');
+            answeredCount++;
+           
+            // 檢查是否所有題目都已回答
+            if (answeredCount === quizData.length) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                submitBtn.classList.add('shadow-cute-hover');
+            }
+        }
+       
+        // --- 核心功能 3: 顯示測驗結果 ---
+        function showResult() {
+            let resultTitle = '';
+            let resultMessage = '';
+            const total = quizData.length;
+            const percentage = (score / total) * 100;
+ 
+            resultDisplay.classList.remove('border-primary-blue', 'border-accent-green', 'border-accent-pink');
+ 
+            if (percentage === 100) {
+                resultTitle = '🥳 恭喜您！滿分天才！';
+                resultMessage = `您拿到了完美的 ${score} / ${total} 分！您對新法完全掌握，是最好的健康小幫手！`;
+                resultDisplay.classList.add('border-accent-green', 'bg-accent-green/10');
+            } else if (percentage >= 80) {
+                resultTitle = '👍 表現優異！做得很好！';
+                resultMessage = `您獲得了 ${score} / ${total} 分。表現棒極了！可以再看看「七大重點整理」加深印象哦。`;
+                resultDisplay.classList.add('border-primary-blue', 'bg-blue-50');
+            } else {
+                resultTitle = '💡 還有進步空間哦！';
+                resultMessage = `您獲得了 ${score} / ${total} 分。別灰心！請切換到「七大重點整理」頁面，讓知識站為您加強學習！`;
+                resultDisplay.classList.add('border-accent-pink', 'bg-accent-pink/10');
+            }
+ 
+            resultText.innerHTML = `<h4 class="text-2xl font-bold mb-2">${resultTitle}</h4>${resultMessage}`;
+            resultDisplay.classList.remove('hidden');
+            submitBtn.disabled = true;
+ 
+            // 滾動到結果區
+            resultDisplay.scrollIntoView({ behavior: 'smooth' });
+        }
+       
+        // --- 核心功能 4: 分頁切換 ---
+        function changeTab(tabId) {
+            const pages = document.querySelectorAll('.page-content');
+            const tabs = document.querySelectorAll('.tab-button');
+ 
+            // 1. 隱藏所有內容頁
+            pages.forEach(page => page.classList.remove('active'));
+ 
+            // 2. 重設所有 Tab 樣式
+            tabs.forEach(tab => {
+                tab.classList.remove('tab-button-active');
+            });
+ 
+            // 3. 顯示目標頁面
+            const targetPage = document.getElementById(`${tabId}-page`);
+            targetPage.classList.add('active');
+ 
+            // 4. 設置目標 Tab 樣式
+            const targetTab = document.getElementById(`tab-${tabId}`);
+            targetTab.classList.add('tab-button-active');
+ 
+            // 5. 滾動到內容頂部
+            document.getElementById('content-container').scrollIntoView({ behavior: 'smooth' });
+        }
+ 
+        // --- 初始化與事件監聽 ---
+        window.onload = function() {
+            renderQuiz();
+            submitBtn.addEventListener('click', showResult);
+            // 確保初始狀態在測驗頁，並正確設置樣式
+            changeTab('quiz');
+        };
+    </script>
+</body>
+</html>
