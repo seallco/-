@@ -1,48 +1,60 @@
 /* --- Google 字體 --- */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Orbitron:wght@400;700&display=swap');
 
+/* --- 變數定義 --- */
+:root {
+    --primary-color: #00bfff; /* 深天藍 */
+    --primary-glow: rgba(0, 191, 255, 0.7);
+    --background-dark: #0a0a10;
+    --container-bg: rgba(15, 23, 42, 0.85);
+    --border-color: rgba(0, 191, 255, 0.25);
+    --text-color: #e0e0e0;
+    --correct-color: #28a745;
+    --wrong-color: #dc3545;
+}
+
 /* --- 全域設定 --- */
 body {
-    /* 主要內容使用清晰的 Noto Sans TC */
     font-family: 'Noto Sans TC', sans-serif;
-    background-color: #0a0a10; /* 深藍黑色背景 */
-    color: #e0e0e0; /* 柔和的白色文字，減少刺眼 */
+    background: radial-gradient(ellipse at bottom, #1b2735 0%, var(--background-dark) 100%);
+    color: var(--text-color);
     display: flex;
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
     margin: 0;
-    padding: 30px;
+    padding: 20px;
     box-sizing: border-box;
-    line-height: 1.7; /* 增加行高，提升易讀性 */
+    line-height: 1.7;
 }
 
 /* --- 測驗主容器 --- */
 .quiz-container {
-    background: rgba(15, 23, 42, 0.8); /* 更深的半透明藍色調背景 */
-    backdrop-filter: blur(5px); /* 毛玻璃效果 */
+    background: var(--container-bg);
+    backdrop-filter: blur(8px);
     border-radius: 15px;
-    border: 1px solid rgba(0, 191, 255, 0.2); /* 深青色邊框 */
-    box-shadow: 0 8px 32px rgba(0, 191, 255, 0.15); /* 青色光暈 */
-    padding: 30px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px var(--primary-glow);
+    padding: 35px;
     width: 100%;
-    max-width: 800px; /* 設定最大寬度，避免在大螢幕上過寬 */
+    max-width: 800px;
+    transition: all 0.3s ease;
 }
 
 h1 {
     text-align: center;
-    /* 標題保留科幻字體 */
     font-family: 'Orbitron', sans-serif;
-    color: #00bfff; /* 深青色 */
+    color: var(--primary-color);
     margin-bottom: 30px;
-    text-shadow: 0 0 10px rgba(0, 191, 255, 0.7); /* 文字光暈 */
+    text-shadow: 0 0 12px var(--primary-glow);
+    letter-spacing: 2px; /* 增加字距 */
 }
 
 /* --- 題目區塊 --- */
 .question {
     margin-bottom: 25px;
     padding-bottom: 25px;
-    border-bottom: 1px solid rgba(0, 191, 255, 0.2); /* 分隔線也用主題色 */
+    border-bottom: 1px solid var(--border-color);
 }
 
 .question:last-of-type {
@@ -50,19 +62,21 @@ h1 {
 }
 
 .question h3 {
-    font-size: 1.2em;
+    font-size: 1.25em;
     font-weight: 500;
-    margin-bottom: 15px;
-    line-height: 1.5;
+    margin-bottom: 20px;
+    line-height: 1.6;
+    color: #f0f0f0; /* 讓題目文字更亮一點 */
 }
 
 /* --- 題目中的圖片 --- */
 .question-image {
-    max-width: 80%;
+    max-width: 100%;
     height: auto;
-    margin: 15px auto; /* 讓圖片水平居中 */
+    margin: 20px auto;
     display: block;
     border-radius: 8px;
+    border: 1px solid var(--border-color);
 }
 
 /* --- 選項按鈕 --- */
@@ -70,116 +84,138 @@ h1 {
     display: block;
     width: 100%;
     text-align: left;
-    margin: 8px 0;
+    margin: 10px 0;
     padding: 15px 20px;
     font-size: 1em;
-    font-family: 'Noto Sans TC', sans-serif; /* 確保按鈕字體也清晰 */
+    font-family: 'Noto Sans TC', sans-serif;
     cursor: pointer;
-    border: 1px solid rgba(0, 191, 255, 0.3);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
-    background-color: rgba(0, 191, 255, 0.05); /* 非常淡的背景色 */
-    color: #e0e0e0;
-    transition: all 0.2s ease-in-out; /* 平滑的過渡效果 */
+    background-color: transparent;
+    color: var(--text-color);
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    overflow: hidden;
 }
 
 .options button:not([disabled]):hover {
-    background-color: rgba(0, 191, 255, 0.2);
-    border-color: #00bfff;
-    transform: translateY(-2px); /* 輕微上浮效果 */
+    background-color: rgba(0, 191, 255, 0.15);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 191, 255, 0.1);
 }
 
 /* --- 答題回饋樣式 --- */
 .correct, .wrong {
     color: #fff;
     border-color: transparent;
-    position: relative;
 }
 
-.correct { background-color: #28a745; } /* 綠色 */
-.wrong { background-color: #dc3545; } /* 紅色 */
+.correct { 
+    background-color: var(--correct-color);
+    animation: glow-green 0.8s ease-out;
+}
+.wrong { 
+    background-color: var(--wrong-color);
+    animation: shake-horizontal 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
 
 /* 使用偽元素加入對錯圖示 */
 .correct::after, .wrong::after {
     position: absolute;
     right: 20px;
     top: 50%;
-    transform: translateY(-50%) scale(1.2);
-    font-size: 1.2em;
-    text-shadow: 0 0 5px #000; /* 黑色陰影，增加可讀性 */
+    transform: translateY(-50%);
+    font-size: 1.3em;
+    font-weight: bold;
 }
 .correct::after { content: '✓'; }
 .wrong::after { content: '✗'; }
 
-.wrong {
-    /* 應用紅色脈衝動畫 */
-    animation: pulse-red 2s infinite;
-}
 
 /* --- 結果與重來按鈕 --- */
 #result {
     margin-top: 30px;
-    font-size: 1.5em;
+    font-size: 1.6em;
     font-weight: bold;
     text-align: center;
-    color: #00bfff;
-    text-shadow: 0 0 8px rgba(0, 191, 255, 0.7);
+    color: var(--primary-color);
+    text-shadow: 0 0 10px var(--primary-glow);
 }
 
 #restart {
     display: block;
     margin: 30px auto 0;
-    padding: 15px 35px;
+    padding: 15px 40px;
     font-size: 1.1em;
     font-family: 'Orbitron', sans-serif;
     font-weight: bold;
     cursor: pointer;
     border: none;
-    border-radius: 30px; /* 膠囊形狀 */
-    background-color: #007bff; /* 主題藍色 */
+    border-radius: 50px;
+    background: linear-gradient(45deg, #007bff, #00bfff);
     color: white;
     transition: all 0.3s ease;
-    box-shadow: 0 0 15px rgba(0, 123, 255, 0.4);
+    box-shadow: 0 5px 20px rgba(0, 123, 255, 0.4);
 }
 
 #restart:hover {
-    background-color: #0056b3; /* 滑鼠懸停時加深顏色 */
-    transform: translateY(-2px);
-    box-shadow: 0 0 25px rgba(0, 123, 255, 0.7);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 30px rgba(0, 150, 255, 0.6);
 }
 
-/* --- 脈衝動畫 --- */
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 0 10px #28a745, 0 0 20px #28a745;
+#restart:active {
+    transform: translateY(-1px);
+}
+
+/* --- 動畫 --- */
+@keyframes glow-green {
+    from {
+        box-shadow: 0 0 5px #fff, 0 0 10px var(--correct-color), 0 0 15px var(--correct-color);
     }
-    50% {
-        transform: scale(1.02);
-        box-shadow: 0 0 20px #28a745, 0 0 40px #28a745;
-    }
-    100% {
-        transform: scale(1);
-        box-shadow: 0 0 10px #28a745, 0 0 20px #28a745;
+    to {
+        box-shadow: none;
     }
 }
 
-.correct {
-    /* 應用脈衝動畫 */
-    animation: pulse 2s infinite;
+@keyframes shake-horizontal {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70% { transform: translateX(-8px); }
+    20%, 40%, 60%, 80% { transform: translateX(8px); }
 }
 
-/* --- 紅色脈衝動畫 (答錯時) --- */
-@keyframes pulse-red {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 0 10px #dc3545, 0 0 20px #dc3545;
+/* --- 響應式設計 --- */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+        align-items: center; /* 在小螢幕上垂直置中 */
     }
-    50% {
-        transform: scale(1.02);
-        box-shadow: 0 0 20px #dc3545, 0 0 40px #dc3545;
+
+    .quiz-container {
+        padding: 20px;
+        margin-top: 0;
     }
-    100% {
-        transform: scale(1);
-        box-shadow: 0 0 10px #dc3545, 0 0 20px #dc3545;
+
+    h1 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    .question h3 {
+        font-size: 1.1em;
+    }
+
+    .options button {
+        padding: 12px 15px;
+        font-size: 0.95em;
+    }
+
+    #result {
+        font-size: 1.4em;
+    }
+
+    #restart {
+        padding: 12px 30px;
+        font-size: 1em;
     }
 }
