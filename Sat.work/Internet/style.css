@@ -1,0 +1,221 @@
+/* --- Google 字體 --- */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Orbitron:wght@400;700&display=swap');
+
+/* --- 變數定義 --- */
+:root {
+    --primary-color: #00bfff; /* 深天藍 */
+    --primary-glow: rgba(0, 191, 255, 0.7);
+    --background-dark: #0a0a10;
+    --container-bg: rgba(15, 23, 42, 0.85);
+    --border-color: rgba(0, 191, 255, 0.25);
+    --text-color: #e0e0e0;
+    --correct-color: #28a745;
+    --wrong-color: #dc3545;
+}
+
+/* --- 全域設定 --- */
+body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: radial-gradient(ellipse at bottom, #1b2735 0%, var(--background-dark) 100%);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    line-height: 1.7;
+}
+
+/* --- 測驗主容器 --- */
+.quiz-container {
+    background: var(--container-bg);
+    backdrop-filter: blur(8px);
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px var(--primary-glow);
+    padding: 35px;
+    width: 100%;
+    max-width: 800px;
+    transition: all 0.3s ease;
+}
+
+h1 {
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+    text-shadow: 0 0 12px var(--primary-glow);
+    letter-spacing: 2px; /* 增加字距 */
+}
+
+/* --- 題目區塊 --- */
+.question {
+    margin-bottom: 25px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.question:last-of-type {
+    border-bottom: none;
+}
+
+.question h3 {
+    font-size: 1.25em;
+    font-weight: 500;
+    margin-bottom: 20px;
+    line-height: 1.6;
+    color: #f0f0f0; /* 讓題目文字更亮一點 */
+}
+
+/* --- 題目中的圖片 --- */
+.question-image {
+    max-width: 100%;
+    height: auto;
+    margin: 20px auto;
+    display: block;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+/* --- 選項按鈕 --- */
+.options button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin: 10px 0;
+    padding: 15px 20px;
+    font-size: 1em;
+    font-family: 'Noto Sans TC', sans-serif;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: transparent;
+    color: var(--text-color);
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.options button:not([disabled]):hover {
+    background-color: rgba(0, 191, 255, 0.15);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 191, 255, 0.1);
+}
+
+/* --- 答題回饋樣式 --- */
+.correct, .wrong {
+    color: #fff;
+    border-color: transparent;
+}
+
+.correct { 
+    background-color: var(--correct-color);
+    animation: glow-green 0.8s ease-out;
+}
+.wrong { 
+    background-color: var(--wrong-color);
+    animation: shake-horizontal 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+/* 使用偽元素加入對錯圖示 */
+.correct::after, .wrong::after {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.3em;
+    font-weight: bold;
+}
+.correct::after { content: '✓'; }
+.wrong::after { content: '✗'; }
+
+
+/* --- 結果與重來按鈕 --- */
+#result {
+    margin-top: 30px;
+    font-size: 1.6em;
+    font-weight: bold;
+    text-align: center;
+    color: var(--primary-color);
+    text-shadow: 0 0 10px var(--primary-glow);
+}
+
+#restart {
+    display: block;
+    margin: 30px auto 0;
+    padding: 15px 40px;
+    font-size: 1.1em;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(45deg, #007bff, #00bfff);
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(0, 123, 255, 0.4);
+}
+
+#restart:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 30px rgba(0, 150, 255, 0.6);
+}
+
+#restart:active {
+    transform: translateY(-1px);
+}
+
+/* --- 動畫 --- */
+@keyframes glow-green {
+    from {
+        box-shadow: 0 0 5px #fff, 0 0 10px var(--correct-color), 0 0 15px var(--correct-color);
+    }
+    to {
+        box-shadow: none;
+    }
+}
+
+@keyframes shake-horizontal {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70% { transform: translateX(-8px); }
+    20%, 40%, 60%, 80% { transform: translateX(8px); }
+}
+
+/* --- 響應式設計 --- */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+        align-items: center; /* 在小螢幕上垂直置中 */
+    }
+
+    .quiz-container {
+        padding: 20px;
+        margin-top: 0;
+    }
+
+    h1 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    .question h3 {
+        font-size: 1.1em;
+    }
+
+    .options button {
+        padding: 12px 15px;
+        font-size: 0.95em;
+    }
+
+    #result {
+        font-size: 1.4em;
+    }
+
+    #restart {
+        padding: 12px 30px;
+        font-size: 1em;
+    }
+}
