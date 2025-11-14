@@ -1,0 +1,178 @@
+/* External stylesheet extracted from inline styles in Tobacco-Control.html
+   - Provides base colors, component styles, animations and responsive tweaks
+   - Keep this file next to `Tobacco-Control.html` and referenced with: <link rel="stylesheet" href="style.css"> */
+
+h1 {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for the main title */
+}
+
+/* 基礎樣式覆蓋 */
+body {
+    background-color: #F8FAFC; /* bg-light */
+    color: #334155; /* text-dark */
+    font-family: 'Inter', sans-serif;
+    padding-bottom: 3rem; /* 底部空間 */
+}
+
+/* 主容器樣式 */
+#content-container {
+    border: 1px solid #E2E8F0;
+    transition: all 0.3s ease;
+}
+
+/* 導航按鈕的可愛效果 */
+.tab-button {
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    border-bottom: 4px solid transparent;
+}
+.tab-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+.tab-button-active {
+    border-bottom-color: #4FC3F7; /* primary-blue */
+    color: #4FC3F7;
+    font-weight: 700;
+    transform: translateY(0);
+}
+
+/* 內容切換動畫 */
+.page-content {
+    display: none;
+    animation: slideIn 0.4s ease-out;
+}
+.page-content.active {
+    display: block;
+}
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 測驗選項卡片樣式 */
+.quiz-option {
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s;
+}
+.quiz-option:not([disabled]):hover {
+    background-color: #F0F9FF; /* light blue hover */
+    border-color: #4FC3F7;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 正確/錯誤反饋顏色 */
+.correct-answer {
+    background-color: #A5D6A7 !important; /* accent-green */
+    color: #1B5E20 !important;
+    border-color: #66BB6A !important;
+    animation: pulse-green 0.5s;
+}
+.incorrect-answer {
+    background-color: #FF8A80 !important; /* accent-pink */
+    color: #D32F2F !important;
+    border-color: #EF5350 !important;
+    animation: shake 0.3s;
+}
+        
+/* 動畫效果 */
+@keyframes pulse-green {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.01); box-shadow: 0 0 10px rgba(165, 214, 167, 0.8); }
+    100% { transform: scale(1); }
+}
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
+/* 戒菸資源連結按鈕 */
+.resource-link {
+    transition: background-color 0.3s, transform 0.1s;
+}
+.resource-link:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 手風琴標題按鈕 */
+.accordion-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+    padding: 0.9rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #E2E8F0;
+    background-color: #F9FAFB;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.accordion-btn:hover {
+    background-color: #EFF6FF;
+    border-color: #4FC3F7;
+    box-shadow: 0 3px 6px rgba(148, 163, 184, 0.2);
+    transform: translateY(-1px);
+}
+
+.accordion-btn span.icon {
+    transition: transform 0.2s ease;
+}
+
+.accordion-content {
+    border-left: 4px solid #4FC3F7;
+    background-color: #FFFFFF;
+}
+
+.accordion-open .accordion-btn {
+    background-color: #DBEAFE;
+    border-color: #4FC3F7;
+}
+
+.accordion-open .accordion-btn span.icon {
+    transform: rotate(90deg);
+}
+
+/* 高亮提示：答錯題目時對應小知識的樣式 */
+.accordion-highlight .accordion-btn {
+    box-shadow: 0 0 0 2px #FBBF24, 0 8px 16px rgba(251, 191, 36, 0.4);
+    border-color: #F59E0B;
+    background-color: #FFFBEB;
+    animation: highlight-pulse 1s ease-out 0s 2;
+}
+
+@keyframes highlight-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.5); }
+    50% { box-shadow: 0 0 0 5px rgba(251, 191, 36, 0.0); }
+    100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.0); }
+}
+
+/* Small responsive tweak: reduce card padding on smaller screens */
+@media (max-width: 640px) {
+    .question-card { padding: 1rem; }
+}
+
+/* Enhanced responsive styles for better readability on all devices */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem; /* Smaller title on mobile */
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for mobile */
+    }
+    body {
+        -webkit-text-size-adjust: 100%; /* Prevent iOS font scaling */
+        font-size: 16px; /* Base font size for mobile */
+    }
+    #content-container {
+        padding: 1.5rem; /* Reduced padding on mobile */
+    }
+    .tab-button {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.8rem;
+    }
+}

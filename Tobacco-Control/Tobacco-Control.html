@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>菸害防制新法知識站 - 可愛教學版</title>
+    <title>菸害防制新法知識站-國立台北師範大學健康促進與衛生教育學系</title>
     <!-- 引入 Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 設定 Tailwind 配置 -->
@@ -18,6 +18,7 @@
                         'accent-pink': '#FF8A80', // 可愛粉紅 (錯誤/警示)
                         'accent-green': '#A5D6A7', // 柔和綠色 (正確/成功)
                         'text-dark': '#334155', // 深色文字
+                        'text-gray-500': '#4B5563', // Darker gray for better readability
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -30,163 +31,17 @@
             },
         }
     </script>
-    <style>
-        /* 基礎樣式覆蓋 */
-        body {
-            background-color: #F8FAFC; /* bg-light */
-            color: #334155; /* text-dark */
-            font-family: 'Inter', sans-serif;
-            padding-bottom: 3rem; /* 底部空間 */
-        }
-
-        /* 主容器樣式 */
-        #content-container {
-            border: 1px solid #E2E8F0;
-            transition: all 0.3s ease;
-        }
-
-        /* 導航按鈕的可愛效果 */
-        .tab-button {
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            border-bottom: 4px solid transparent;
-        }
-        .tab-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-        }
-        .tab-button-active {
-            border-bottom-color: #4FC3F7; /* primary-blue */
-            color: #4FC3F7;
-            font-weight: 700;
-            transform: translateY(0);
-        }
-
-        /* 內容切換動畫 */
-        .page-content {
-            display: none;
-            animation: slideIn 0.4s ease-out;
-        }
-        .page-content.active {
-            display: block;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* 測驗選項卡片樣式 */
-        .quiz-option {
-            background-color: #FFFFFF;
-            border: 1px solid #E2E8F0;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            transition: all 0.2s;
-        }
-        .quiz-option:not([disabled]):hover {
-            background-color: #F0F9FF; /* light blue hover */
-            border-color: #4FC3F7;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        /* 正確/錯誤反饋顏色 */
-        .correct-answer {
-            background-color: #A5D6A7 !important; /* accent-green */
-            color: #1B5E20 !important;
-            border-color: #66BB6A !important;
-            animation: pulse-green 0.5s;
-        }
-        .incorrect-answer {
-            background-color: #FF8A80 !important; /* accent-pink */
-            color: #D32F2F !important;
-            border-color: #EF5350 !important;
-            animation: shake 0.3s;
-        }
-        
-        /* 動畫效果 */
-        @keyframes pulse-green {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.01); box-shadow: 0 0 10px rgba(165, 214, 167, 0.8); }
-            100% { transform: scale(1); }
-        }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-5px); }
-            40%, 80% { transform: translateX(5px); }
-        }
-
-        /* 戒菸資源連結按鈕 */
-        .resource-link {
-            transition: background-color 0.3s, transform 0.1s;
-        }
-        .resource-link:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        /* 手風琴標題按鈕 */
-        .accordion-btn {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            text-align: left;
-            padding: 0.9rem 1rem;
-            border-radius: 0.75rem;
-            border: 1px solid #E2E8F0;
-            background-color: #F9FAFB;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-        }
-
-        .accordion-btn:hover {
-            background-color: #EFF6FF;
-            border-color: #4FC3F7;
-            box-shadow: 0 3px 6px rgba(148, 163, 184, 0.2);
-            transform: translateY(-1px);
-        }
-
-        .accordion-btn span.icon {
-            transition: transform 0.2s ease;
-        }
-
-        .accordion-content {
-            border-left: 4px solid #4FC3F7;
-            background-color: #FFFFFF;
-        }
-
-        .accordion-open .accordion-btn {
-            background-color: #DBEAFE;
-            border-color: #4FC3F7;
-        }
-
-        .accordion-open .accordion-btn span.icon {
-            transform: rotate(90deg);
-        }
-
-        /* 高亮提示：答錯題目時對應小知識的樣式 */
-        .accordion-highlight .accordion-btn {
-            box-shadow: 0 0 0 2px #FBBF24, 0 8px 16px rgba(251, 191, 36, 0.4);
-            border-color: #F59E0B;
-            background-color: #FFFBEB;
-            animation: highlight-pulse 1s ease-out 0s 2;
-        }
-
-        @keyframes highlight-pulse {
-            0% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.5); }
-            50% { box-shadow: 0 0 0 5px rgba(251, 191, 36, 0.0); }
-            100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.0); }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-bg-light text-text-dark min-h-screen">
     <div class="max-w-7xl mx-auto p-4 md:p-8">
 
         <!-- 標題與導覽列 -->
         <header class="text-center mb-10">
-            <h1 class="text-4xl font-extrabold text-primary-blue mb-2 tracking-wide">
-                ⭐ 菸害防制新法知識站 ⭐
-            </h1>
+                        <h1 class="text-4xl font-extrabold text-primary-blue mb-2 tracking-wide">
+                            ⭐ 菸害防制新法知識站 ⭐
+                        </h1>
+            <h3 class="text-2xl font-medium text-accent-pink mb-4 text-center"> 🎓 國立台北師範大學健康促進與衛生教育學系 🎓</h3>
             <p class="text-gray-500 text-lg">輕鬆學習，一次搞懂電子煙、加熱菸與最新法規！</p>
         </header>
 
