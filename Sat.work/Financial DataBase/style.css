@@ -1,0 +1,185 @@
+/* --- Google 字體 --- */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Orbitron:wght@400;700&display=swap');
+
+/* --- 全域設定 --- */
+body {
+    /* 主要內容使用清晰的 Noto Sans TC */
+    font-family: 'Noto Sans TC', sans-serif;
+    background-color: #0a0a10; /* 深藍黑色背景 */
+    color: #e0e0e0; /* 柔和的白色文字，減少刺眼 */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    margin: 0;
+    padding: 30px;
+    box-sizing: border-box;
+    line-height: 1.7; /* 增加行高，提升易讀性 */
+}
+
+/* --- 測驗主容器 --- */
+.quiz-container {
+    background: rgba(15, 23, 42, 0.8); /* 更深的半透明藍色調背景 */
+    backdrop-filter: blur(5px); /* 毛玻璃效果 */
+    border-radius: 15px;
+    border: 1px solid rgba(0, 191, 255, 0.2); /* 深青色邊框 */
+    box-shadow: 0 8px 32px rgba(0, 191, 255, 0.15); /* 青色光暈 */
+    padding: 30px;
+    width: 100%;
+    max-width: 800px; /* 設定最大寬度，避免在大螢幕上過寬 */
+}
+
+h1 {
+    text-align: center;
+    /* 標題保留科幻字體 */
+    font-family: 'Orbitron', sans-serif;
+    color: #00bfff; /* 深青色 */
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px rgba(0, 191, 255, 0.7); /* 文字光暈 */
+}
+
+/* --- 題目區塊 --- */
+.question {
+    margin-bottom: 25px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid rgba(0, 191, 255, 0.2); /* 分隔線也用主題色 */
+}
+
+.question:last-of-type {
+    border-bottom: none;
+}
+
+.question h3 {
+    font-size: 1.2em;
+    font-weight: 500;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+/* --- 題目中的圖片 --- */
+.question-image {
+    max-width: 80%;
+    height: auto;
+    margin: 15px auto; /* 讓圖片水平居中 */
+    display: block;
+    border-radius: 8px;
+}
+
+/* --- 選項按鈕 --- */
+.options button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin: 8px 0;
+    padding: 15px 20px;
+    font-size: 1em;
+    font-family: 'Noto Sans TC', sans-serif; /* 確保按鈕字體也清晰 */
+    cursor: pointer;
+    border: 1px solid rgba(0, 191, 255, 0.3);
+    border-radius: 8px;
+    background-color: rgba(0, 191, 255, 0.05); /* 非常淡的背景色 */
+    color: #e0e0e0;
+    transition: all 0.2s ease-in-out; /* 平滑的過渡效果 */
+}
+
+.options button:not([disabled]):hover {
+    background-color: rgba(0, 191, 255, 0.2);
+    border-color: #00bfff;
+    transform: translateY(-2px); /* 輕微上浮效果 */
+}
+
+/* --- 答題回饋樣式 --- */
+.correct, .wrong {
+    color: #fff;
+    border-color: transparent;
+    position: relative;
+}
+
+.correct { background-color: #28a745; } /* 綠色 */
+.wrong { background-color: #dc3545; } /* 紅色 */
+
+/* 使用偽元素加入對錯圖示 */
+.correct::after, .wrong::after {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%) scale(1.2);
+    font-size: 1.2em;
+    text-shadow: 0 0 5px #000; /* 黑色陰影，增加可讀性 */
+}
+.correct::after { content: '✓'; }
+.wrong::after { content: '✗'; }
+
+.wrong {
+    /* 應用紅色脈衝動畫 */
+    animation: pulse-red 2s infinite;
+}
+
+/* --- 結果與重來按鈕 --- */
+#result {
+    margin-top: 30px;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    color: #00bfff;
+    text-shadow: 0 0 8px rgba(0, 191, 255, 0.7);
+}
+
+#restart {
+    display: block;
+    margin: 30px auto 0;
+    padding: 15px 35px;
+    font-size: 1.1em;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    border-radius: 30px; /* 膠囊形狀 */
+    background-color: #007bff; /* 主題藍色 */
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.4);
+}
+
+#restart:hover {
+    background-color: #0056b3; /* 滑鼠懸停時加深顏色 */
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(0, 123, 255, 0.7);
+}
+
+/* --- 脈衝動畫 --- */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 10px #28a745, 0 0 20px #28a745;
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 0 20px #28a745, 0 0 40px #28a745;
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px #28a745, 0 0 20px #28a745;
+    }
+}
+
+.correct {
+    /* 應用脈衝動畫 */
+    animation: pulse 2s infinite;
+}
+
+/* --- 紅色脈衝動畫 (答錯時) --- */
+@keyframes pulse-red {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 10px #dc3545, 0 0 20px #dc3545;
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 0 20px #dc3545, 0 0 40px #dc3545;
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px #dc3545, 0 0 20px #dc3545;
+    }
+}

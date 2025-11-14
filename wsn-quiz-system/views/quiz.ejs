@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>測驗系統</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container py-4">
+  <h1 class="mb-4">📘 無線感測網路測驗</h1>
+  <% questions.forEach((q, index) => { %>
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5>Q<%= index + 1 %>. <%= q.question %></h5>
+        <% q.options.forEach(opt => { %>
+          <button class="btn btn-outline-primary btn-sm d-block my-1" onclick="checkAnswer(this, '<%= q.answer %>', '<%= q.explanation %>')"><%= opt %></button>
+        <% }) %>
+        <div class="result mt-2"></div>
+      </div>
+    </div>
+  <% }) %>
+  <script>
+    function checkAnswer(btn, correct, explanation) {
+      const result = btn.parentElement.querySelector('.result');
+      if (btn.textContent === correct) {
+        result.innerHTML = `<span class='text-success'>✅ 正確！</span> ${explanation}`;
+      } else {
+        result.innerHTML = `<span class='text-danger'>❌ 錯誤，正確答案是「${correct}」。</span> ${explanation}`;
+      }
+      btn.parentElement.querySelectorAll('button').forEach(b => b.disabled = true);
+    }
+  </script>
+</body>
+</html>
