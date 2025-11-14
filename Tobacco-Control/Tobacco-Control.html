@@ -38,13 +38,13 @@
             font-family: 'Inter', sans-serif;
             padding-bottom: 3rem; /* 底部空間 */
         }
- 
+
         /* 主容器樣式 */
         #content-container {
             border: 1px solid #E2E8F0;
             transition: all 0.3s ease;
         }
- 
+
         /* 導航按鈕的可愛效果 */
         .tab-button {
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -60,7 +60,7 @@
             font-weight: 700;
             transform: translateY(0);
         }
- 
+
         /* 內容切換動畫 */
         .page-content {
             display: none;
@@ -73,7 +73,7 @@
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
- 
+
         /* 測驗選項卡片樣式 */
         .quiz-option {
             background-color: #FFFFFF;
@@ -87,7 +87,7 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
- 
+
         /* 正確/錯誤反饋顏色 */
         .correct-answer {
             background-color: #A5D6A7 !important; /* accent-green */
@@ -101,7 +101,7 @@
             border-color: #EF5350 !important;
             animation: shake 0.3s;
         }
-       
+        
         /* 動畫效果 */
         @keyframes pulse-green {
             0% { transform: scale(1); }
@@ -113,7 +113,7 @@
             20%, 60% { transform: translateX(-5px); }
             40%, 80% { transform: translateX(5px); }
         }
- 
+
         /* 戒菸資源連結按鈕 */
         .resource-link {
             transition: background-color 0.3s, transform 0.1s;
@@ -122,19 +122,74 @@
             transform: translateY(-1px);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
+        /* 手風琴標題按鈕 */
+        .accordion-btn {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            text-align: left;
+            padding: 0.9rem 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid #E2E8F0;
+            background-color: #F9FAFB;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .accordion-btn:hover {
+            background-color: #EFF6FF;
+            border-color: #4FC3F7;
+            box-shadow: 0 3px 6px rgba(148, 163, 184, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .accordion-btn span.icon {
+            transition: transform 0.2s ease;
+        }
+
+        .accordion-content {
+            border-left: 4px solid #4FC3F7;
+            background-color: #FFFFFF;
+        }
+
+        .accordion-open .accordion-btn {
+            background-color: #DBEAFE;
+            border-color: #4FC3F7;
+        }
+
+        .accordion-open .accordion-btn span.icon {
+            transform: rotate(90deg);
+        }
+
+        /* 高亮提示：答錯題目時對應小知識的樣式 */
+        .accordion-highlight .accordion-btn {
+            box-shadow: 0 0 0 2px #FBBF24, 0 8px 16px rgba(251, 191, 36, 0.4);
+            border-color: #F59E0B;
+            background-color: #FFFBEB;
+            animation: highlight-pulse 1s ease-out 0s 2;
+        }
+
+        @keyframes highlight-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.5); }
+            50% { box-shadow: 0 0 0 5px rgba(251, 191, 36, 0.0); }
+            100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.0); }
+        }
     </style>
 </head>
 <body class="bg-bg-light text-text-dark min-h-screen">
     <div class="max-w-7xl mx-auto p-4 md:p-8">
- 
+
         <!-- 標題與導覽列 -->
         <header class="text-center mb-10">
             <h1 class="text-4xl font-extrabold text-primary-blue mb-2 tracking-wide">
                 ⭐ 菸害防制新法知識站 ⭐
             </h1>
-            <p class="text-gray-500 text-lg">輕鬆學習，一起守護健康！</p>
+            <p class="text-gray-500 text-lg">輕鬆學習，一次搞懂電子煙、加熱菸與最新法規！</p>
         </header>
- 
+
         <nav class="sticky top-0 z-20 bg-card-bg/95 backdrop-blur-sm shadow-cute-md rounded-xl mb-8 p-3 border border-gray-200">
             <div class="flex justify-center space-x-2 md:space-x-6">
                 <!-- 知識挑戰按鈕 -->
@@ -143,262 +198,487 @@
                 </button>
                 <!-- 核心資料按鈕 -->
                 <button id="tab-summary" onclick="changeTab('summary')" class="tab-button text-gray-600 px-4 md:px-6 py-3 text-sm md:text-base font-medium">
-                    💡 七大重點整理
+                    💡 小知識補充
                 </button>
                 <!-- 資源按鈕 -->
                 <button id="tab-resources" onclick="changeTab('resources')" class="tab-button text-gray-600 px-4 md:px-6 py-3 text-sm md:text-base font-medium">
-                    💖 戒菸支援站
+                    📚 延伸資訊與提醒
                 </button>
             </div>
         </nav>
- 
+
         <!-- 內容區塊 -->
         <div id="content-container" class="bg-card-bg p-6 md:p-10 rounded-2xl shadow-cute-md">
- 
+
             <!-- 1. 互動測驗區 -->
             <section id="quiz-page" class="page-content active">
-                <h2 class="text-3xl font-bold text-text-dark mb-8 border-l-4 border-primary-blue pl-4">✏️ 知識小測驗：法規大挑戰</h2>
-                <p class="text-gray-600 mb-8">準備好了嗎？點選您認為正確的答案，讓我們看看您對新法的了解程度！</p>
-               
+                <h2 class="text-3xl font-bold text-text-dark mb-6 border-l-4 border-primary-blue pl-4">
+                    ✏️ 知識小測驗：一起破解新興菸品迷思
+                </h2>
+                <p class="text-gray-600 mb-6">
+                    題目內容完全來自本次的電子煙、加熱菸懶人包。<br class="hidden md:inline">
+                    完成小測驗後，可以到「💡 小知識補充」分頁，對照自己答錯的主題再加強！
+                </p>
+                
                 <div id="quiz-area" class="space-y-8">
                     <!-- 測驗題目將由 JS 動態生成 -->
                 </div>
- 
-                <div id="quiz-control" class="mt-12 pt-8 border-t border-gray-200 text-center">
-                    <button id="submit-quiz-btn" class="bg-primary-blue text-white text-xl font-bold px-8 py-3 rounded-full resource-link" disabled>
-                        🎁 提交答案並領取結果
+
+                <div id="quiz-control" class="mt-10 pt-6 border-t border-gray-200 flex flex-wrap items-center justify-center gap-4">
+                    <button id="submit-quiz-btn" class="bg-primary-blue text-white text-xl font-bold px-8 py-3 rounded-full resource-link opacity-50 cursor-not-allowed" disabled>
+                        🎁 提交答案並查看結果
+                    </button>
+                    <button id="reset-quiz-btn" class="bg-gray-100 text-gray-800 text-lg font-medium px-6 py-3 rounded-full hover:bg-gray-200 transition">
+                        🔄 重新開始作答
                     </button>
                 </div>
- 
+
                 <!-- 測驗結果顯示區 -->
-                <div id="result-display" class="hidden mt-12 p-6 md:p-8 bg-gray-100 border-l-4 border-primary-blue rounded-lg">
+                <div id="result-display" class="hidden mt-10 p-6 md:p-8 bg-gray-100 border-l-4 border-primary-blue rounded-lg">
                     <h3 class="text-2xl font-bold text-primary-blue mb-3">🎉 您的學習成果</h3>
                     <p id="result-text" class="text-lg text-text-dark"></p>
                 </div>
             </section>
- 
-            <!-- 2. 懶人包介紹區 (七大重點整理) -->
+
+            <!-- 2. 小知識補充區（手風琴） -->
             <section id="summary-page" class="page-content">
-                <h2 class="text-3xl font-bold text-text-dark mb-8 border-l-4 border-primary-blue pl-4">💡 七大重點整理：新法規必知！</h2>
-                <p class="text-gray-600 mb-10">新版《菸害防制法》的七個重要改變，用可愛卡片一次記住！</p>
-               
-                <!-- 七宮格卡片 (RWD Grid Layout) -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                   
-                    <!-- 卡片 1: 禁止電子煙 -->
-                    <div class="p-5 rounded-xl bg-accent-pink/10 border-l-4 border-accent-pink shadow-cute-md resource-link">
-                        <div class="text-4xl mb-2">🚫</div>
-                        <h3 class="text-xl font-bold text-accent-pink mb-2">1. ❌ 全面禁止電子煙</h3>
-                        <p class="text-gray-600 text-sm">電子煙、霧化器等所有**類菸品**，全面禁止製造、輸入、販賣、供應、廣告及使用！</p>
+                <h2 class="text-3xl font-bold text-text-dark mb-6 border-l-4 border-primary-blue pl-4">
+                    💡 小知識補充：對照懶人包加深記憶
+                </h2>
+                <p class="text-gray-600 mb-8">
+                    下列重點內容皆整理自本次的「電子煙、加熱菸懶人包」。<br class="hidden md:inline">
+                    若在小測驗中答錯題目，可以來找到對應的小標題，點開複習！
+                </p>
+
+                <div class="space-y-8">
+
+                    <!-- 區塊一：電子煙 / 加熱菸危害 -->
+                    <div>
+                        <h3 class="text-2xl font-semibold text-text-dark mb-4 flex items-center gap-2">
+                            <span>🚭 區塊一：電子煙 / 加熱菸的危害與迷思</span>
+                        </h3>
+                        <div class="space-y-3">
+
+                            <!-- 1. 電子煙是什麼？ -->
+                            <div id="accordion-ecig-what" class="accordion-item">
+                                <button type="button" class="accordion-btn" onclick="toggleAccordion('summary-ecig-what', 'accordion-ecig-what')">
+                                    <span>1️⃣ 電子煙是什麼？看起來像 USB，其實是「電池＋霧化器＋煙油」</span>
+                                    <span class="icon">▶</span>
+                                </button>
+                                <div id="summary-ecig-what" class="accordion-content hidden mt-2 p-4 rounded-xl shadow-cute-md">
+                                    <p class="text-sm text-gray-700 leading-relaxed">
+                                        懶人包中提到，<strong>電子煙是以電能驅動霧化器，加熱煙油產生氣霧供使用者吸入肺中</strong>。
+                                        主要結構包括：電池、霧化器與煙彈。外型可能做成筆型、方塊、甚至像隨身碟，
+                                        容易讓人忽略它其實是菸品的一種。
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- 2. 電子煙裡有哪些成分與「致命的誘惑」？ -->
+                            <div id="accordion-ecig-components" class="accordion-item">
+                                <button type="button" class="accordion-btn" onclick="toggleAccordion('summary-ecig-components', 'accordion-ecig-components')">
+                                    <span>2️⃣ 電子煙裡有什麼？尼古丁、致癌物＋香甜風味的「致命誘惑」</span>
+                                    <span class="icon">▶</span>
+                                </button>
+                                <div id="summary-ecig-components" class="accordion-content hidden mt-2 p-4 rounded-xl shadow-cute-md">
+                                    <p class="text-sm text-gray-700 leading-relaxed mb-2">
+                                        懶人包中指出，電子煙煙油加熱後會產生：<strong>尼古丁</strong>（造成心跳加快、血壓上升、成癮）、
+                                        <strong>致癌物</strong>（如菸草特定亞硝胺、甲醛、乙醛等），以及其他有害化學物質。
+                                    </p>
+                                    <p class="text-sm text-gray-700 leading-relaxed">
+                                        更重要的是，電子煙常推出<strong>巧克力、香草、薄荷等多種風味</strong>，
+                                        搭配酷炫外型，特別強化對青少年族群的吸引力。世界衛生組織也呼籲，各國需嚴格面對
+                                        「<strong>調味菸品</strong>」帶來的健康風險。
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- 3. 電子煙 / 加熱菸對青少年的大腦發育有什麼影響？ -->
+                            <div id="accordion-youth-brain" class="accordion-item">
+                                <button type="button" class="accordion-btn" onclick="toggleAccordion('summary-youth-brain', 'accordion-youth-brain')">
+                                    <span>3️⃣ 青少年大腦超敏感：尼古丁會干擾注意力、記憶與情緒控制</span>
+                                    <span class="icon">▶</span>
+                                </button>
+                                <div id="summary-youth-brain" class="accordion-content hidden mt-2 p-4 rounded-xl shadow-cute-md">
+                                    <p class="text-sm text-gray-700 leading-relaxed mb-2">
+                                        懶人包提醒，電子煙與加熱菸都含有<strong>高度成癮的尼古丁</strong>，
+                                        對仍在發育中的青少年大腦影響特別大，可能干擾：
+                                    </p>
+                                    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-2">
+                                        <li>注意力與專注力</li>
+                                        <li>記憶力與學習能力</li>
+                                        <li>情緒與衝動控制</li>
+                                    </ul>
+                                    <p class="text-sm text-gray-700 leading-relaxed">
+                                        研究也指出，<strong>曾使用電子煙的青少年，未來吸紙菸的機率是未使用者的 2 倍以上</strong>，
+                                        也就是說，電子煙不是「遠離紙菸」，而是可能成為邁向傳統菸品的入口。
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- 4. 電子煙的隱藏傷害：肺損傷、爆米花肺與爆炸風險 -->
+                            <div id="accordion-ecig-hidden" class="accordion-item">
+                                <button type="button" class="accordion-btn" onclick="toggleAccordion('summary-ecig-hidden', 'accordion-ecig-hidden')">
+                                    <span>4️⃣ 電子煙的隱藏傷害：EVALI、爆米花肺、毒性化學物與爆炸</span>
+                                    <span class="icon">▶</span>
+                                </button>
+                                <div id="summary-ecig-hidden" class="accordion-content hidden mt-2 p-4 rounded-xl shadow-cute-md">
+                                    <p class="text-sm text-gray-700 leading-relaxed mb-2">
+                                        懶人包指出，電子煙相關的健康問題包括：
+                                    </p>
+                                    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-2">
+                                        <li><strong>肺損傷（EVALI）</strong>：造成嚴重肺部發炎、呼吸困難，2019–2020 年已有數千人住院、多人死亡。</li>
+                                        <li><strong>爆米花肺</strong>：與「丁二酮」等物質有關，會造成細支氣管炎與呼吸功能受損。</li>
+                                        <li><strong>毒性物質與裝置爆炸風險</strong>：電子裝置及電池若使用不當，還可能引發爆炸與外傷。</li>
+                                    </ul>
+                                    <p class="text-sm text-gray-700 leading-relaxed">
+                                        這些都是看不到、卻非常真實的危害，因此不能把電子煙當成「只是水蒸氣」或「比較安全」。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
- 
-                    <!-- 卡片 2: 嚴格管制加熱菸 -->
-                    <div class="p-5 rounded-xl bg-yellow-100 border-l-4 border-yellow-400 shadow-cute-md resource-link">
-                        <div class="text-4xl mb-2">🌡️📝</div>
-                        <h3 class="text-xl font-bold text-yellow-600 mb-2">2. ⚠️ 加熱菸：嚴格審查</h3>
-                        <p class="text-gray-600 text-sm">加熱菸需要通過政府的**健康風險評估審查核定通過**後，才能製造或進口。</p>
+
+                    <!-- 區塊二：加熱菸與新法規 -->
+                    <div>
+                        <h3 class="text-2xl font-semibold text-text-dark mb-4 flex items-center gap-2">
+                            <span>📜 區塊二：加熱菸與新版菸害防制法重點</span>
+                        </h3>
+                        <div class="space-y-3">
+
+                            <!-- 5. 什麼是加熱菸？ -->
+                            <div id="accordion-htp-what" class="accordion-item">
+                                <button type="button" class="accordion-btn" onclick="toggleAccordion('summary-htp-what', 'accordion-htp-what')">
+                                    <span>5️⃣ 加熱菸怎麼運作？不是「沒煙味就沒危險」</span>
+                                    <span class="icon">▶</span>
+                                </button>
+                                <div id="summary-htp-what" class="accordion-content hidden mt-2 p-4 rounded-xl shadow-cute-md">
+                                    <p class="text-sm text-gray-700 leading-relaxed">
+                                        懶人包說明，<strong>加熱菸是利用電子元件將菸草棒中的金屬片加熱</strong>，
+                                        讓菸草在未完全燃燒的情況下釋放含有尼古丁與其他化學物質的氣霧。
+                                        即使煙味較淡，排放物中仍含有毒與致癌物，並非「沒有煙味就沒風險」。
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- 6. 加熱菸的成分與「不是無害替代品」 -->
+                            <div id="accordion-htp-risk" class="accordion-item">
+                                <button type="button" class="accordion-btn" onclick="toggleAccordion('summary-htp-risk', 'accordion-htp-risk')">
+                                    <span>6️⃣ 加熱菸＝比較安全？懶人包說：「風險不低於傳統菸」</span>
+                                    <span class="icon">▶</span>
+                                </button>
+                                <div id="summary-htp-risk" class="accordion-content hidden mt-2 p-4 rounded-xl shadow-cute-md">
+                                    <p class="text-sm text-gray-700 leading-relaxed mb-2">
+                                        懶人包中強調，加熱菸與傳統紙菸一樣，<strong>仍然含有尼古丁、焦油、重金屬、甲醛、乙醛等毒性與致癌物質</strong>，
+                                        並可能釋放「甲醛氰醇」等劇毒物質。
+                                    </p>
+                                    <p class="text-sm text-gray-700 leading-relaxed">
+                                        因此，<strong>任何形式的菸品都沒有安全劑量，也無法真正幫助戒菸</strong>；
+                                        把加熱菸當成「健康替代品」或「戒菸工具」其實是一種迷思。
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- 7. 新版菸害防制法重點一次看 -->
+                            <div id="accordion-law" class="accordion-item">
+                                <button type="button" class="accordion-btn" onclick="toggleAccordion('summary-law', 'accordion-law')">
+                                    <span>7️⃣ 新版菸害防制法重點：類菸品全面禁止、加熱菸審查、大專校院全面禁菸</span>
+                                    <span class="icon">▶</span>
+                                </button>
+                                <div id="summary-law" class="accordion-content hidden mt-2 p-4 rounded-xl shadow-cute-md">
+                                    <p class="text-sm text-gray-700 leading-relaxed mb-2">
+                                        懶人包最後整理出新版《菸害防制法》幾個重要重點：
+                                    </p>
+                                    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-2">
+                                        <li><strong>全面禁止類菸品（含電子煙）</strong>：電子煙等類菸品不可製造、輸入、販賣、供應、廣告及使用。</li>
+                                        <li><strong>加熱菸需通過健康風險評估審查</strong>：須經中央主管機關核定通過，才可製造或輸入。</li>
+                                        <li><strong>提高禁菸年齡至 20 歲</strong>：未滿 20 歲不得吸菸，也不得向其販售或供應菸品。</li>
+                                        <li><strong>大專校院納入全面禁菸場所</strong>：包括室內外校園空間皆禁菸，守護學習環境。</li>
+                                    </ul>
+                                    <p class="text-sm text-gray-700 leading-relaxed">
+                                        這些法規與電子煙、加熱菸的健康風險是連在一起的：<strong>因為危害確實存在，因此才需要更嚴格的管制。</strong>
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
- 
-                    <!-- 卡片 3: 年齡提高 -->
-                    <div class="p-5 rounded-xl bg-blue-100 border-l-4 border-primary-blue shadow-cute-md resource-link">
-                        <div class="text-4xl mb-2">⬆️ 20</div>
-                        <h3 class="text-xl font-bold text-primary-blue mb-2">3. 📈 年齡門檻提高到 20 歲</h3>
-                        <p class="text-gray-600 text-sm">未滿 20 歲者不得吸菸、也不得向其販賣或供應菸品。請注意查核年齡喔！</p>
-                    </div>
-                   
-                    <!-- 卡片 4: 擴大禁菸場所 -->
-                    <div class="p-5 rounded-xl bg-accent-green/10 border-l-4 border-accent-green shadow-cute-md resource-link">
-                        <div class="text-4xl mb-2">🏫🌳</div>
-                        <h3 class="text-xl font-bold text-green-700 mb-2">4. 🔒 學校全面禁菸</h3>
-                        <p class="text-gray-600 text-sm">大專院校、幼兒園、托嬰中心等場所，所有室內外區域**全面禁菸**！</p>
-                    </div>
- 
-                    <!-- 卡片 5: 警示圖文面積 -->
-                    <div class="p-5 rounded-xl bg-purple-100 border-l-4 border-purple-400 shadow-cute-md resource-link">
-                        <div class="text-4xl mb-2">🖼️ 50%</div>
-                        <h3 class="text-xl font-bold text-purple-600 mb-2">5. 📊 警示圖文面積 50%</h3>
-                        <p class="text-gray-600 text-sm">菸品容器上的健康警示圖文比例，從 35% 大幅增加到 **50%**。</p>
-                    </div>
- 
-                    <!-- 卡片 6: 禁用添加物 -->
-                    <div class="p-5 rounded-xl bg-red-100 border-l-4 border-red-400 shadow-cute-md resource-link">
-                        <div class="text-4xl mb-2">⛔ 🍓</div>
-                        <h3 class="text-xl font-bold text-red-600 mb-2">6. 🚫 禁用特定調味劑</h3>
-                        <p class="text-gray-600 text-sm">未來將禁止使用經公告的特定添加物，避免用香味吸引人購買！</p>
-                    </div>
-                   
-                    <!-- 卡片 7: 罰則加重 -->
-                    <div class="p-5 rounded-xl bg-orange-100 border-l-4 border-orange-400 shadow-cute-md resource-link lg:col-span-1 md:col-start-2 lg:col-start-3">
-                        <div class="text-4xl mb-2">💰⚡</div>
-                        <h3 class="text-xl font-bold text-orange-600 mb-2">7. ⬆️ 違規罰則大大提高</h3>
-                        <p class="text-gray-600 text-sm">大幅提高違法製造、輸入、販賣或使用者之罰鍰金額，嚇阻效果更強！</p>
-                    </div>
+
                 </div>
             </section>
- 
-            <!-- 3. 危害與戒菸資源區 -->
+
+            <!-- 3. 危害與延伸資訊區 -->
             <section id="resources-page" class="page-content">
-                <h2 class="text-3xl font-bold text-text-dark mb-8 border-l-4 border-primary-blue pl-4">💖 戒菸支援站：為健康加油！</h2>
- 
-                <!-- 菸品危害區塊 -->
+                <h2 class="text-3xl font-bold text-text-dark mb-6 border-l-4 border-primary-blue pl-4">
+                    📚 延伸資訊與提醒：從懶人包再看一次風險
+                </h2>
+
+                <!-- 菸品危害整理 -->
                 <div class="harm-section mb-10">
-                    <h3 class="text-2xl font-semibold text-text-dark mb-6 border-b border-gray-200 pb-2">🚨 菸品危害小百科</h3>
+                    <h3 class="text-2xl font-semibold text-text-dark mb-4 border-b border-gray-200 pb-2">
+                        🚨 懶人包裡的三個關鍵提醒
+                    </h3>
+                    <p class="text-gray-600 mb-4 text-sm">
+                        這一頁整理的是懶人包中反覆出現的共通訊息，可以當成「總結版」來看：
+                    </p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="p-4 bg-accent-pink/10 rounded-lg shadow-sm border border-accent-pink resource-link">
-                            <div class="text-4xl mb-2">💨</div>
-                            <h4 class="text-xl font-bold text-accent-pink mb-1">一手菸 (主動)</h4>
-                            <p class="text-gray-600 text-sm">直接傷害自己的身體器官，是健康的最大殺手！</p>
+                        <div class="p-4 bg-accent-pink/10 rounded-lg shadow-sm border border-accent-pink">
+                            <div class="text-3xl mb-2">💊</div>
+                            <h4 class="text-lg font-bold text-accent-pink mb-1">尼古丁＝高度成癮物質</h4>
+                            <p class="text-gray-700 text-sm">
+                                不論是電子煙還是加熱菸，<strong>尼古丁都會讓心跳加快、血壓上升，並造成依賴</strong>，
+                                對仍在發育中的青少年大腦影響尤其明顯。
+                            </p>
                         </div>
-                        <div class="p-4 bg-yellow-100 rounded-lg shadow-sm border border-yellow-400 resource-link">
-                            <div class="text-4xl mb-2">👨‍👩‍👧‍👦</div>
-                            <h4 class="text-xl font-bold text-yellow-600 mb-1">二手菸 (被動)</h4>
-                            <p class="text-gray-600 text-sm">對周圍的家人和朋友造成傷害，尤其是兒童。</p>
+                        <div class="p-4 bg-yellow-100 rounded-lg shadow-sm border border-yellow-400">
+                            <div class="text-3xl mb-2">☣️</div>
+                            <h4 class="text-lg font-bold text-yellow-700 mb-1">毒性化學物與致癌物</h4>
+                            <p class="text-gray-700 text-sm">
+                                懶人包列出：<strong>甲醛、乙醛、重金屬、菸草特定亞硝胺等</strong>，
+                                都可能在電子煙或加熱菸的排放物中出現，<strong>風險不低於傳統紙菸</strong>。
+                            </p>
                         </div>
-                        <div class="p-4 bg-purple-100 rounded-lg shadow-sm border border-purple-400 resource-link">
-                            <div class="text-4xl mb-2">🛋️</div>
-                            <h4 class="text-xl font-bold text-purple-600 mb-1">三手菸 (殘留)</h4>
-                            <p class="text-gray-600 text-sm">殘留在衣服、傢俱上的有害物質，危害嬰幼兒健康。</p>
+                        <div class="p-4 bg-purple-100 rounded-lg shadow-sm border border-purple-400">
+                            <div class="text-3xl mb-2">🧠</div>
+                            <h4 class="text-lg font-bold text-purple-700 mb-1">青少年更容易受害</h4>
+                            <p class="text-gray-700 text-sm">
+                                懶人包提醒：尼古丁會干擾青少年的注意力、記憶、學習與情緒控制，
+                                而且<strong>曾使用電子煙的青少年，未來吸紙菸機率是未使用者的 2 倍以上</strong>。
+                            </p>
                         </div>
                     </div>
                 </div>
- 
-                <!-- 戒菸資源區塊 -->
+
+                <!-- 延伸資訊 / 查詢來源 -->
                 <div class="quit-section">
-                    <h3 class="text-2xl font-semibold text-text-dark mb-6 border-b border-gray-200 pb-2">☎️ 專業戒菸幫手</h3>
-                    <div class="space-y-4">
-                        <div class="resource-item p-4 border border-primary-blue rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center bg-blue-50">
-                            <div>
-                                <h4 class="text-xl font-bold text-primary-blue mb-1">📞 戒菸專線服務</h4>
-                                <p class="text-gray-600">免費、隱密，有專業人士提供諮詢與心理支持。</p>
-                            </div>
-                            <a href="tel:0800636363" class="bg-primary-blue text-white font-bold px-4 py-2 rounded-full resource-link mt-2 sm:mt-0">
-                                撥打電話 (0800-636363)
-                            </a>
+                    <h3 class="text-2xl font-semibold text-text-dark mb-4 border-b border-gray-200 pb-2">
+                        🔍 想知道更多，可以從哪裡找到可靠資訊？
+                    </h3>
+                    <p class="text-gray-600 text-sm mb-4">
+                        懶人包最後也列出了一些重要的參考來源，這些都是在討論電子煙與加熱菸時，
+                        可以信賴的資訊管道：
+                    </p>
+                    <div class="space-y-3">
+                        <div class="p-4 border border-primary-blue rounded-lg bg-blue-50">
+                            <h4 class="text-lg font-bold text-primary-blue mb-1">🌐 世界衛生組織（WHO）</h4>
+                            <p class="text-gray-700 text-sm">
+                                懶人包引用 WHO 關於全球電子煙使用趨勢與菸草控制的報告，提醒各國正視
+                                <strong>調味菸品</strong>與新興菸品帶來的健康與政策挑戰。
+                            </p>
                         </div>
- 
-                        <div class="resource-item p-4 border border-accent-green rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center bg-accent-green/10">
-                            <div>
-                                <h4 class="text-xl font-bold text-green-700 mb-1">🏥 國民健康署：二代戒菸服務</h4>
-                                <p class="text-gray-600">尋找全國提供藥物或門診戒菸服務的醫療院所。</p>
-                            </div>
-                            <a href="https://www.hpa.gov.tw/Pages/List.aspx?nodeid=4611" target="_blank" class="bg-accent-green text-green-900 font-bold px-4 py-2 rounded-full resource-link mt-2 sm:mt-0">
-                                查詢戒菸門診
-                            </a>
+                        <div class="p-4 border border-accent-green rounded-lg bg-accent-green/10">
+                            <h4 class="text-lg font-bold text-green-700 mb-1">🏫 教育部學校衛生資訊網</h4>
+                            <p class="text-gray-700 text-sm">
+                                懶人包引用「你知道嗎？電子煙及加熱菸的真相」等教材與圖解，
+                                提供適合校園使用的衛教內容，是學生與老師都能參考的資源。
+                            </p>
+                        </div>
+                        <div class="p-4 border border-purple-400 rounded-lg bg-purple-50">
+                            <h4 class="text-lg font-bold text-purple-700 mb-1">💬 專業醫療與戒菸相關網站</h4>
+                            <p class="text-gray-700 text-sm">
+                                懶人包也引用國內醫界文章與華文戒菸相關資源。<br>
+                                若你或身邊的人正面臨菸品使用的困擾，<strong>可以把這份懶人包帶去與醫療專業人員、
+                                校園健康中心或輔導老師討論</strong>，一起評估健康風險與戒菸方向。
+                            </p>
                         </div>
                     </div>
                 </div>
             </section>
         </div>
     </div>
- 
+
     <!-- JavaScript 邏輯區塊 -->
     <script>
-        // Quiz Data (題庫)
+        // Quiz Data (題庫) - 5 題，皆依懶人包內容設計，避免與前後測原題目撞題
+        // 多加了 summaryId、contentId、hintText，用來精準對應「小知識補充」區塊
         const quizData = [
             {
-                q: "1. 依據現行《菸害防制法》規定，任何人不得供應菸品予未滿幾歲者？",
-                options: ["未滿 18 歲", "未滿 20 歲", "未滿 22 歲", "未滿 16 歲"],
-                answer: 1, // B. 未滿 20 歲
-                feedback: "✅ **答對了！** 新法將禁止吸菸年齡提高至未滿 20 歲。",
+                q: "1. 懶人包中提到，以下哪一項最符合「電子煙」的運作方式？",
+                options: [
+                    "A. 像紙菸一樣燃燒菸草產生煙霧供人吸入。",
+                    "B. 以電池供電，透過霧化器加熱煙油產生氣霧，再讓使用者吸入肺中。",
+                    "C. 僅產生水蒸氣，不會被吸入肺部。",
+                    "D. 僅在空氣中散發香味，沒有任何吸入行為。"
+                ],
+                answer: 1, // B
+                feedback: "✅ <strong>答對了！</strong> 懶人包說明，電子煙是以電能驅動霧化器，加熱煙油產生氣霧，由使用者吸入肺中。",
+                summaryId: "accordion-ecig-what",
+                contentId: "summary-ecig-what",
+                hintText: "👉 小知識請參考：🚭 區塊一，第 1 點〈電子煙是什麼？〉"
             },
             {
-                q: "2. 針對「電子煙」等所有類菸品，新法規定的管制措施為何？",
-                options: ["必須通過健康風險評估審查才能販賣。", "只能在特定合法場所使用。", "全面禁止製造、輸入、販賣、供應、廣告及使用。", "僅禁止在校園內使用與販售。"],
-                answer: 2, // C. 全面禁止...
-                feedback: "✅ **答對了！** 臺灣對電子煙等所有類菸品採全面禁止態度。",
+                q: "2. 根據懶人包，下列哪一項敘述「最符合」電子煙的成分與設計特色？",
+                options: [
+                    "A. 電子煙只有水和香料，不含尼古丁。",
+                    "B. 電子煙可以加入巧克力、香草、薄荷等多種風味，搭配造型來吸引年輕族群。",
+                    "C. 電子煙完全不會產生任何致癌物質。",
+                    "D. 電子煙的煙油不會被加熱，所以沒有化學變化。"
+                ],
+                answer: 1, // B
+                feedback: "✅ <strong>答對了！</strong> 懶人包提到電子煙會加入各種風味煙油，搭配酷炫外型，形成對年輕族群的「致命誘惑」。",
+                summaryId: "accordion-ecig-components",
+                contentId: "summary-ecig-components",
+                hintText: "👉 小知識請參考：🚭 區塊一，第 2 點〈電子煙裡有什麼？〉"
             },
             {
-                q: "3. 修正後的《菸害防制法》擴大禁菸場所，請問「大專院校」的禁菸範圍為何？",
-                options: ["僅限室內區域禁菸，室外設有吸菸區。", "校園所有室內外場所全面禁菸。", "僅限教學區禁菸，宿舍區可吸菸。", "僅禁止於教學大樓及行政大樓吸菸。"],
-                answer: 1, // B. 校園所有室內外場所全面禁菸。
-                feedback: "✅ **答對了！** 大專院校、幼兒園等都擴大為校園內所有室內外場所全面禁菸。",
+                q: "3. 懶人包中指出，使用電子煙或加熱菸的青少年，其未來吸紙菸的風險下列何者正確？",
+                options: [
+                    "A. 比未使用者更低。",
+                    "B. 與未使用者差不多。",
+                    "C. 未來吸紙菸的機率是未使用者的 2 倍以上。",
+                    "D. 只在成年後才可能增加風險。"
+                ],
+                answer: 2, // C
+                feedback: "✅ <strong>答對了！</strong> 懶人包指出，曾使用電子煙的青少年，未來吸紙菸的機率是未使用者的 2 倍以上。",
+                summaryId: "accordion-youth-brain",
+                contentId: "summary-youth-brain",
+                hintText: "👉 小知識請參考：🚭 區塊一，第 3 點〈青少年大腦超敏感〉"
             },
             {
-                q: "4. 針對「加熱菸」，在臺灣是否可直接販售？",
-                options: ["是，只要包裝上有警示圖文即可販售。", "否，必須經中央主管機關健康風險評估審查核定通過，始得製造或輸入。", "否，任何新型態菸品都如同電子煙，一律禁止。", "是，只要繳納高額健康捐即可販售。"],
-                answer: 1, // B. 否，必須經中央主管機關...
-                feedback: "✅ **答對了！** 加熱菸屬指定菸品，需通過審查才能上市，與全面禁止的電子煙不同。",
+                q: "4. 根據懶人包，下列何者「不是」電子煙相關的健康問題或風險？",
+                options: [
+                    "A. 肺損傷（EVALI）與嚴重肺部發炎。",
+                    "B. 爆米花肺，導致細支氣管病變與呼吸功能受損。",
+                    "C. 穩定呼吸功能，改善氣喘發作頻率。",
+                    "D. 吸入毒性物質，可能導致住院甚至死亡。"
+                ],
+                answer: 2, // C
+                feedback: "✅ <strong>答對了！</strong> 懶人包提到的是肺損傷、爆米花肺、住院甚至死亡等風險，絕不是「改善氣喘」。",
+                summaryId: "accordion-ecig-hidden",
+                contentId: "summary-ecig-hidden",
+                hintText: "👉 小知識請參考：🚭 區塊一，第 4 點〈電子煙的隱藏傷害〉"
             },
             {
-                q: "5. 新法規定菸品容器上必須印製警示圖文的面積比例，已提高至多少？",
-                options: ["15%", "35%", "50%", "70%"],
-                answer: 2, // C. 50%
-                feedback: "✅ **答對了！** 警示圖文面積由 35% 提高至 **50%**。",
-            },
+                q: "5. 依據懶人包整理的新版《菸害防制法》重點，下列哪一項敘述是正確的？",
+                options: [
+                    "A. 大專校院只在教室內禁菸，操場與戶外仍可自由吸菸。",
+                    "B. 新法全面禁止「類菸品（含電子煙）」的製造、販售與使用。",
+                    "C. 新法將禁菸年齡維持在未滿 18 歲。",
+                    "D. 加熱菸可不經審查直接販售，只要在包裝上標示警語即可。"
+                ],
+                answer: 1, // B
+                feedback: "✅ <strong>答對了！</strong> 懶人包指出，新版法規全面禁止類菸品（含電子煙），並將加熱菸納入嚴格審查。",
+                summaryId: "accordion-law",
+                contentId: "summary-law",
+                hintText: "👉 小知識請參考：📜 區塊二，第 7 點〈新版菸害防制法重點〉"
+            }
         ];
- 
+
         let score = 0;
         let answeredCount = 0;
         const quizArea = document.getElementById('quiz-area');
         const submitBtn = document.getElementById('submit-quiz-btn');
+        const resetBtn = document.getElementById('reset-quiz-btn');
         const resultDisplay = document.getElementById('result-display');
         const resultText = document.getElementById('result-text');
-       
-        // --- 核心功能 1: 渲染測驗題目 ---
+        
+        // 清除所有小知識的高亮與展開（給重新開始用）
+        function clearAccordionHighlights() {
+            const items = document.querySelectorAll('.accordion-item');
+            items.forEach(item => {
+                item.classList.remove('accordion-open', 'accordion-highlight');
+            });
+            const contents = document.querySelectorAll('.accordion-content');
+            contents.forEach(c => {
+                c.classList.add('hidden');
+            });
+        }
+
+        // 高亮＋展開對應的小知識
+        function highlightSummary(summaryId, contentId) {
+            const item = document.getElementById(summaryId);
+            const content = document.getElementById(contentId);
+            if (!item || !content) return;
+
+            // 打開該手風琴
+            content.classList.remove('hidden');
+            item.classList.add('accordion-open');
+
+            // 加上高亮效果
+            item.classList.add('accordion-highlight');
+        }
+        
+        // --- 渲染測驗題目 ---
         function renderQuiz() {
-            quizArea.innerHTML = '';
+            quizArea.innerHTML = ''; 
+            score = 0;
+            answeredCount = 0;
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            resultDisplay.classList.add('hidden');
+
             quizData.forEach((data, qIndex) => {
                 const qCard = document.createElement('div');
                 qCard.className = 'question-card p-6 border-l-4 border-primary-blue bg-white rounded-lg shadow-cute-md';
                 qCard.innerHTML = `<p class="question-text text-xl font-bold text-text-dark mb-4">${data.q}</p>`;
- 
+
                 const optionsDiv = document.createElement('div');
                 optionsDiv.className = 'options space-y-3';
- 
+
                 data.options.forEach((option, oIndex) => {
                     const optionBtn = document.createElement('button');
-                    optionBtn.textContent = `${String.fromCharCode(65 + oIndex)}. ${option}`;
+                    optionBtn.textContent = option;
                     optionBtn.className = 'quiz-option w-full text-left px-5 py-3 rounded-xl transition duration-200 text-text-dark';
-                   
-                    // 使用 closure 確保傳遞正確的索引
                     optionBtn.onclick = () => handleAnswer(qIndex, oIndex, optionBtn);
-                   
                     optionsDiv.appendChild(optionBtn);
                 });
- 
+
                 const feedbackDiv = document.createElement('div');
                 feedbackDiv.id = `feedback-${qIndex}`;
                 feedbackDiv.className = 'feedback mt-3 p-3 border-l-4 rounded-md text-sm hidden';
-               
+                
                 qCard.appendChild(optionsDiv);
                 qCard.appendChild(feedbackDiv);
                 quizArea.appendChild(qCard);
             });
         }
-       
-        // --- 核心功能 2: 處理使用者作答 ---
+        
+        // --- 處理使用者作答 ---
         function handleAnswer(qIndex, optionIndex, clickedButton) {
             const data = quizData[qIndex];
-            const isCorrect = optionIndex === data.answer;
             const options = clickedButton.closest('.options').querySelectorAll('button');
             const feedbackDiv = document.getElementById(`feedback-${qIndex}`);
- 
-            // 確保只計算一次分數
-            if (clickedButton.disabled) return;
- 
-            // 禁用所有選項並標記
+
+            // 如果這題已經有按過（任一選項 disabled），就不再重複計算
+            if ([...options].some(btn => btn.disabled)) return;
+
+            const isCorrect = optionIndex === data.answer;
+
+            // 禁用所有選項並標記正確解答
             options.forEach((btn, index) => {
                 btn.disabled = true;
                 if (index === data.answer) {
                     btn.classList.add('correct-answer');
                 }
             });
- 
-            // 處理分數和動畫
+
+            // 正確／錯誤回饋＋精準對應小知識位置
             if (isCorrect) {
                 score++;
-                feedbackDiv.innerHTML = data.feedback;
+                feedbackDiv.innerHTML = `
+                    ${data.feedback}<br>
+                    ${data.hintText}
+                `;
                 feedbackDiv.classList.add('bg-accent-green/20', 'border-accent-green', 'text-green-800');
             } else {
                 clickedButton.classList.add('incorrect-answer');
- 
-                feedbackDiv.innerHTML = `❌ **答錯囉！** 正確答案是：${data.options[data.answer]}。 ${data.feedback.replace('✅ 答對了！', '請再複習一下！')}`;
+
+                const correctOption = data.options[data.answer];
+                feedbackDiv.innerHTML = `
+                    ❌ <strong>答錯囉！</strong> 正確答案是：${correctOption}<br>
+                    💡 請再複習一下：${data.feedback.replace('✅ <strong>答對了！</strong>', '')}<br>
+                    ${data.hintText}<br>
+                    （系統已幫你在「💡 小知識補充」中自動高亮對應的小標題）
+                `;
                 feedbackDiv.classList.add('bg-accent-pink/20', 'border-accent-pink', 'text-red-700');
+
+                // 自動高亮與展開對應的小知識
+                highlightSummary(data.summaryId, data.contentId);
             }
- 
+
             feedbackDiv.classList.remove('hidden');
             answeredCount++;
-           
+            
             // 檢查是否所有題目都已回答
             if (answeredCount === quizData.length) {
                 submitBtn.disabled = false;
@@ -406,69 +686,95 @@
                 submitBtn.classList.add('shadow-cute-hover');
             }
         }
-       
-        // --- 核心功能 3: 顯示測驗結果 ---
+        
+        // --- 顯示測驗結果 ---
         function showResult() {
             let resultTitle = '';
             let resultMessage = '';
             const total = quizData.length;
             const percentage = (score / total) * 100;
- 
-            resultDisplay.classList.remove('border-primary-blue', 'border-accent-green', 'border-accent-pink');
- 
+
+            // 重置樣式
+            resultDisplay.classList.remove('border-primary-blue', 'border-accent-green', 'border-accent-pink', 'bg-accent-green/10', 'bg-blue-50', 'bg-accent-pink/10');
+            resultDisplay.classList.add('bg-gray-100');
+
             if (percentage === 100) {
                 resultTitle = '🥳 恭喜您！滿分天才！';
-                resultMessage = `您拿到了完美的 ${score} / ${total} 分！您對新法完全掌握，是最好的健康小幫手！`;
+                resultMessage = `您拿到了完美的 ${score} / ${total} 分！您已經非常熟悉這份懶人包的內容，是健康知識小達人！`;
                 resultDisplay.classList.add('border-accent-green', 'bg-accent-green/10');
             } else if (percentage >= 80) {
                 resultTitle = '👍 表現優異！做得很好！';
-                resultMessage = `您獲得了 ${score} / ${total} 分。表現棒極了！可以再看看「七大重點整理」加深印象哦。`;
+                resultMessage = `您獲得了 ${score} / ${total} 分。表現非常棒，只要再對照「小知識補充」複習一下，就更牢固囉。`;
                 resultDisplay.classList.add('border-primary-blue', 'bg-blue-50');
             } else {
                 resultTitle = '💡 還有進步空間哦！';
-                resultMessage = `您獲得了 ${score} / ${total} 分。別灰心！請切換到「七大重點整理」頁面，讓知識站為您加強學習！`;
+                resultMessage = `您獲得了 ${score} / ${total} 分。建議打開「💡 小知識補充」與「📚 延伸資訊」分頁，找出自己比較不熟的主題，再看一次懶人包整理。`;
                 resultDisplay.classList.add('border-accent-pink', 'bg-accent-pink/10');
             }
- 
+
             resultText.innerHTML = `<h4 class="text-2xl font-bold mb-2">${resultTitle}</h4>${resultMessage}`;
             resultDisplay.classList.remove('hidden');
             submitBtn.disabled = true;
- 
+
             // 滾動到結果區
             resultDisplay.scrollIntoView({ behavior: 'smooth' });
         }
-       
-        // --- 核心功能 4: 分頁切換 ---
+        
+        // --- 分頁切換 ---
         function changeTab(tabId) {
             const pages = document.querySelectorAll('.page-content');
             const tabs = document.querySelectorAll('.tab-button');
- 
-            // 1. 隱藏所有內容頁
+
+            // 隱藏所有內容頁
             pages.forEach(page => page.classList.remove('active'));
- 
-            // 2. 重設所有 Tab 樣式
+
+            // 重設所有 Tab 樣式
             tabs.forEach(tab => {
                 tab.classList.remove('tab-button-active');
             });
- 
-            // 3. 顯示目標頁面
+
+            // 顯示目標頁面
             const targetPage = document.getElementById(`${tabId}-page`);
             targetPage.classList.add('active');
- 
-            // 4. 設置目標 Tab 樣式
+
+            // 設置目標 Tab 樣式
             const targetTab = document.getElementById(`tab-${tabId}`);
             targetTab.classList.add('tab-button-active');
- 
-            // 5. 滾動到內容頂部
+
+            // 滾動到內容頂部
             document.getElementById('content-container').scrollIntoView({ behavior: 'smooth' });
         }
- 
+
+        // --- 手風琴切換 ---
+        function toggleAccordion(contentId, itemId) {
+            const content = document.getElementById(contentId);
+            const item = document.getElementById(itemId);
+            if (!content || !item) return;
+
+            const isHidden = content.classList.contains('hidden');
+
+            if (isHidden) {
+                content.classList.remove('hidden');
+                item.classList.add('accordion-open');
+            } else {
+                content.classList.add('hidden');
+                item.classList.remove('accordion-open');
+            }
+        }
+
+        // --- 重新開始作答 ---
+        function resetQuiz() {
+            renderQuiz();
+            clearAccordionHighlights();
+            resultDisplay.classList.add('hidden');
+        }
+
         // --- 初始化與事件監聽 ---
         window.onload = function() {
             renderQuiz();
             submitBtn.addEventListener('click', showResult);
-            // 確保初始狀態在測驗頁，並正確設置樣式
-            changeTab('quiz');
+            resetBtn.addEventListener('click', resetQuiz);
+            changeTab('quiz'); // 初始顯示測驗頁
         };
     </script>
 </body>
